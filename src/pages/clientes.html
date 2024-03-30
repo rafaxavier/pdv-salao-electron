@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';"> -->
+    <link rel="stylesheet" href="../components/navLoader.css">
+    <link rel="stylesheet" href="./styles.css">
+
+    <title>Lista de Clientes</title>
+
+</head>
+
+<body>
+
+    <!-- The Modal -->
+    <!-- <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+        </div>
+
+    </div> -->
+
+    <!-- Modal de Edição -->
+    <div id="modal-editar-cliente" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="title-cliente">Editar Cliente</h2>
+                <input type="text" id="id-cliente" hidden>
+                <label for="edit-nome">Nome:</label>
+                <input type="text" id="edit-nome" name="edit-nome" required>
+                <label for="edit-telefone">Telefone:</label>
+                <input type="text" id="edit-telefone" name="edit-telefone" required>
+                <button onclick="atualizaCliente()" type="button">Salvar</button>
+        </div>
+    </div>
+
+
+    <div class="header"></div>
+    <h2>Lista de Clientes</h2>
+
+    <!-- ### Add Cliente ### -->
+    <div>
+        <input id="nome-cliente" type="text" placeholder="nome">
+        <input id="telefone-cliente" type="text" placeholder="telefone">
+        <button onclick="salvarCliente()">salvar</button>
+    </div>
+    <hr>
+
+    <div id="content">
+        <!-- Os clientes serão adicionados aqui dinamicamente -->
+    </div>
+
+    <script src="../components/navLoader.js"></script>
+    <script src="../../renderer.js"></script>
+    <script src="./clientes.js"></script>
+    <script>
+        // window.addEventListener('DOMContentLoaded', () => {
+        //     // const form = document.querySelector('#form-add-cliente');
+        //     // const nomeCliente = document.querySelector('#nome-cliente');
+        //     // const telefonCliente = document.querySelector('#telefone-cliente');
+        //     // form.addEventListener("submit", (e) => {
+        //     //     e.preventDefault();
+
+        //     //     const nome = nomeCliente.value
+        //     //     const telefone = telefonCliente.value
+        //     //     if (nome !== '' && telefone !== '') {
+        //     //         createCliente(nome, telefone)
+        //     //     }
+        //     // })
+        // });
+
+
+
+
+    </script>
+</body>
+
+</html>
