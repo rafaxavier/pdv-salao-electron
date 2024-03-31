@@ -4,7 +4,7 @@
 const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron');
 
-const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./sqliteService')
+const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/sqliteService')
 
 const createWindow = () => {
   // Create the browser window.
