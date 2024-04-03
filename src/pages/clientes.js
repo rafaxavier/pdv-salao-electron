@@ -49,12 +49,25 @@ async function salvarCliente() {
   const nome = document.getElementById('nome-cliente');
   const telefone = document.getElementById('telefone-cliente');
 
-  if (nome.value !== '' && telefone.value !== '') {
+  if (nome.value !== '' && telefone.value !== '' && telefone.value.length >= 14) {
     await createCliente(nome.value, telefone.value);
     nome.value = '';
     telefone.value = '';
     atualizarTabelaClientes();
   }
+}
+
+function handlePhone(event) {
+  let input = event.target
+  input.value = phoneMask(input.value)
+}
+
+function phoneMask(value) {
+  if (!value) return ""
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, "($1) $2")
+  value = value.replace(/(\d)(\d{4})$/, "$1-$2")
+  return value
 }
 
 // atualiza cliente
@@ -63,7 +76,7 @@ async function atualizaCliente() {
   const nome = document.getElementById('edit-nome').value;
   const telefone = document.getElementById('edit-telefone').value;
 
-  if (nome !== '' && telefone !== '') {
+  if (nome !== '' && telefone !== '' && telefone.length >= 14) {
     await updateCliente(id, nome, telefone);
     document.getElementById('modal-editar-cliente').style.display = "none";
     atualizarTabelaClientes();
@@ -128,7 +141,9 @@ function criarListaDeClientes(clientes) {
     column2.textContent = cliente.telefone;
 
     editButton.textContent = 'Editar';
+    editButton.classList.add('btn-warning', 'btn-sm');
     deleteButton.textContent = 'Deletar';
+    deleteButton.classList.add('btn-danger', 'btn-sm')
 
     deleteButton.addEventListener('click', () => deletaCliente(cliente.id));
 

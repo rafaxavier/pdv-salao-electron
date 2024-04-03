@@ -13,69 +13,42 @@
 </head>
 
 <body>
-
-    <!-- The Modal -->
-    <!-- <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Some text in the Modal..</p>
-        </div>
-
-    </div> -->
-
     <!-- Modal de Edição -->
     <div id="modal-editar-cliente" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2 id="title-cliente">Editar Cliente</h2>
-                <input type="text" id="id-cliente" hidden>
-                <label for="edit-nome">Nome:</label>
-                <input type="text" id="edit-nome" name="edit-nome" required>
-                <label for="edit-telefone">Telefone:</label>
-                <input type="text" id="edit-telefone" name="edit-telefone" required>
-                <button onclick="atualizaCliente()" type="button">Salvar</button>
+            <input type="text" id="id-cliente" hidden>
+            <label for="edit-nome">Nome:</label>
+            <input type="text" id="edit-nome" name="edit-nome" required>
+            <label for="edit-telefone">Telefone:</label>
+            <input type="text" id="edit-telefone" name="edit-telefone" type="tel" maxlength="15"
+                onkeyup="handlePhone(event)" required>
+            <div style="display: flex; justify-content: center; margin: 10px;"><button class="btn-success btn-sm" onclick="atualizaCliente()" type="button">Salvar</button></div>
         </div>
     </div>
 
 
     <div class="header"></div>
-    <h2>Lista de Clientes</h2>
+    <div class="conteiner-contente">
+        <h2>Lista de Clientes</h2>
 
-    <!-- ### Add Cliente ### -->
-    <div>
-        <input id="nome-cliente" type="text" placeholder="nome">
-        <input id="telefone-cliente" type="text" placeholder="telefone">
-        <button onclick="salvarCliente()">salvar</button>
-    </div>
-    <hr>
+        <!-- ### Add Cliente ### -->
+        <div>
+            <input id="nome-cliente" type="text" placeholder="nome">
+            <input id="telefone-cliente" type="tel" maxlength="15" onkeyup="handlePhone(event)" placeholder="telefone">
+            <button class="btn-success btn-sm" onclick="salvarCliente()">Salvar</button>
+        </div>
+        <hr>
 
-    <div id="content">
-        <!-- Os clientes serão adicionados aqui dinamicamente -->
+        <div id="content">
+            <!-- Os clientes serão adicionados aqui dinamicamente -->
+        </div>
     </div>
 
     <script src="../components/navLoader.js"></script>
     <script src="../../renderer.js"></script>
     <script src="./clientes.js"></script>
-    <script>
-        // window.addEventListener('DOMContentLoaded', () => {
-        //     // const form = document.querySelector('#form-add-cliente');
-        //     // const nomeCliente = document.querySelector('#nome-cliente');
-        //     // const telefonCliente = document.querySelector('#telefone-cliente');
-        //     // form.addEventListener("submit", (e) => {
-        //     //     e.preventDefault();
-
-        //     //     const nome = nomeCliente.value
-        //     //     const telefone = telefonCliente.value
-        //     //     if (nome !== '' && telefone !== '') {
-        //     //         createCliente(nome, telefone)
-        //     //     }
-        //     // })
-        // });
-
-
-
-
-    </script>
 </body>
 
 </html>
