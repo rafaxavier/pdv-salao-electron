@@ -1,28 +1,38 @@
 /* Estilos específicos para o navLoader */
 .header {
-  background-color: #333; /* Exemplo de cor de fundo para o cabeçalho */
-  padding: 10px;
+  /* background: rgb(66, 7, 105); */
+  background: linear-gradient(180deg, rgb(48, 27, 141) 5%, rgb(83, 13, 129) 50%, rgba(61, 2, 42, 0.425) 100%);
+  /* background-color: gradiente(); */
+  /* Exemplo de cor de fundo para o cabeçalho */
+  padding: 0px;
+  /* width: 250px; */
+  height: 100vh;
+  display: flex;
 }
 
 .header nav ul {
+  width: 220px;
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.header nav ul li {
-  display: inline;
-  margin-right: 10px;
-}
-
 .header nav ul li a {
+  display: flex;
+  border-bottom: 1px solid #ffffff;
   text-decoration: none;
-  color: white; /* Exemplo de cor do texto dos links */
-  padding: 8px 12px;
-  border-radius: 5px;
+  color: white;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
   transition: background-color 0.3s ease;
 }
 
 .header nav ul li a.active {
-  background-color: #555; /* Exemplo de cor de fundo para o link ativo */
+  background-color: #487fd1b2;
+}
+
+.header nav ul li a:hover {
+  font-weight: bold;
+  background-color: #487fd1b2;
 }

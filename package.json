@@ -1,7 +1,7 @@
 {
   "name": "pdv-salao",
   "version": "1.0.0",
-  "description": "Hello World!",
+  "description": "App Gestão Financeira para Salão",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
