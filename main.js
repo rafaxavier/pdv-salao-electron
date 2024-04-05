@@ -28,8 +28,8 @@ ipcMain.on('obterClientes', async (event) => {
   event.reply('obterClientesResult', { success: true, clientes }); // Envia os clientes de volta para o processo de renderização
 });
 
-ipcMain.on('criarClientes', async (event, { nome, telefone }) => {
-  const create = await criarCliente(nome, telefone);
+ipcMain.on('criarClientes', async (event, { nome, telefone, cpf }) => {
+  const create = await criarCliente(nome, telefone, cpf);
   if (create === 1) {
     feedBack = { success: true, msg: 'cliente salvo com sucesso' }
   } else {
@@ -51,8 +51,8 @@ ipcMain.on('deletarClientes', async (event, { id }) => {
   event.reply('deletarClientesResult', feedBack);
 });
 
-ipcMain.on('editarClientes', async (event, { id, nome, telefone }) => {
-  const update = await editarCliente(id, nome, telefone);
+ipcMain.on('editarClientes', async (event, { id, nome, telefone, cpf }) => {
+  const update = await editarCliente(id, nome, telefone, cpf);
   let feedBack = {};
 
   if (update === 1) {

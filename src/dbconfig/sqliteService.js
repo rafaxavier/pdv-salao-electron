@@ -21,7 +21,9 @@ function createDatabaseStructure() {
       CREATE TABLE IF NOT EXISTS clientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
-        telefone TEXT
+        telefone TEXT,
+        cpf TEXT UNIQUE
+        
       )
     `);
 
@@ -31,7 +33,7 @@ function createDatabaseStructure() {
         console.error('Erro ao verificar a tabela de clientes:', err);
       } else {
         if (row.count === 0) {
-          db.run('INSERT INTO clientes (nome, telefone) VALUES (?, ?)', ['Cliente Padrão', '123456789']);
+          db.run('INSERT INTO clientes (nome, telefone, cpf) VALUES (?, ?, ?)', ['Jhon Mark', '(21)97322-1111', '111.222.333-44']);
         }
       }
     });
@@ -49,7 +51,7 @@ if (!dbExists) {
 // Função para obter todos os clientes
 const obterClientes = () => {
   return new Promise((resolve, reject) => {
-    db.all('SELECT * FROM clientes', (err, rows) => {
+    db.all('SELECT * FROM clientes ORDER BY nome ASC', (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -59,9 +61,9 @@ const obterClientes = () => {
   });
 };
 
-const criarCliente = async (nome, telefone) => {
+const criarCliente = async (nome, telefone, cpf) => {
   return new Promise((resolve, reject) => {
-    db.run('INSERT INTO clientes (nome, telefone) VALUES (?, ?)', [nome, telefone], function (err) {
+    db.run('INSERT INTO clientes (nome, telefone, cpf) VALUES (?, ?, ?)', [nome, telefone, cpf], function (err) {
       if (err) {
         console.log(err)
         reject(err);
@@ -87,9 +89,9 @@ const deletarCliente = async (id) => {
 };
 
 // Função para excluir um cliente
-const editarCliente = async (id, nome, telefone) => {
+const editarCliente = async (id, nome, telefone, cpf) => {
   return new Promise((resolve, reject) => {
-    db.run('UPDATE clientes SET nome = ?, telefone = ?  WHERE id = ?', [nome, telefone, id], function (err) {
+    db.run('UPDATE clientes SET nome = ?, telefone = ?, cpf = ?  WHERE id = ?', [nome, telefone, cpf, id], function (err) {
       if (err) {
         console.log(err)
         reject(err);
