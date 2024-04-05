@@ -11,9 +11,15 @@ body {
   flex-direction:row;
 }
 
-.conteiner-contente{
+.conteiner-content{
   width: 100%;
-  height: auto;
+  margin: 20px;
+
+}
+
+#content{
+  height: calc(100vh - 200px);
+  overflow-y: auto;
   margin: 20px;
 }
 
@@ -33,10 +39,19 @@ th {
   background-color: #f2f2f2;
 }
 
+#modal-criar-cliente{
+  display: none;
+
+}
+
+#modal-editar-cliente{
+  display: none;
+
+}
 /* modal form de edicao de cliente */
 /* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
+  
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
@@ -81,6 +96,16 @@ input {
   padding: 5px;
 }
 
+button{
+  cursor:pointer;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  font-size: 14px;
+}
+
 .btn-success {
   background-color: green;
   color: #f2f2f2;
@@ -97,12 +122,9 @@ input {
 }
 
 .btn-sm {
-  cursor:pointer;
-  width: 100%;
-  border: none;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 5px;
-  font-size: 14px;
   width: 60px;
+}
+
+.btn-md {
+  width: 150px;
 }
