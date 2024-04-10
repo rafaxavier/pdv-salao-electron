@@ -2,9 +2,7 @@
 const getAllClientes = () => {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('obterClientes');
-    // Adicione um listener para receber os clientes
     window.electron.ipcRenderer.once('obterClientesResult', (resposta) => {
-      console.log(resposta.clientes);
       resolve(resposta.clientes);
     });
   });
@@ -13,7 +11,6 @@ const getAllClientes = () => {
 const createCliente = (nome, telefone, cpf) => {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('criarClientes', { nome, telefone, cpf });
-    // Adicione um listener para receber os clientes
     window.electron.ipcRenderer.once('criarClientesResult', (resposta) => {
       console.log(resposta);
       resolve(resposta);
@@ -24,7 +21,6 @@ const createCliente = (nome, telefone, cpf) => {
 const deleteCliente = (id) => {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('deletarClientes', { id });
-    // Adicione um listener para receber os clientes
     window.electron.ipcRenderer.once('deletarClientesResult', (resposta) => {
       console.log(resposta);
       resolve(resposta);
@@ -35,7 +31,6 @@ const deleteCliente = (id) => {
 const updateCliente = (id, nome, telefone, cpf) => {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('editarClientes', { id, nome, telefone, cpf });
-    // Adicione um listener para receber os clientes
     window.electron.ipcRenderer.once('editarClientesResult', (resposta) => {
       console.log(resposta);
       resolve(resposta);
@@ -51,9 +46,7 @@ searchInput.addEventListener('input', function () {
   const searchText = this.value.toLowerCase();
   const arr = todosClientes.filter(e => e.nome.toLowerCase().includes(searchText))
   table.innerHTML = '';
-  criarListaDeClientes(arr)
-  console.log(arr)
-
+  criarListaDeClientes(arr);
 });
 
 // ####### mascaras para inputs

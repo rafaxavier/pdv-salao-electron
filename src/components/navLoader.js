@@ -21,8 +21,8 @@ const criarMenu = (paginaAtiva) => {
 
         // Array de itens do menu com seus respectivos links
         const itensMenu = [
-            { nome: 'Home', link: '../pages/index.html' },
-            { nome: 'Clientes', link: '../pages/clientes.html' },
+            { nome: 'Home', link: '../../pages/home/index.html' },
+            { nome: 'Clientes', link: '../../pages/clientes/index.html' },
             { nome: 'Serviços', link: '#' },
             { nome: 'Contato', link: '#' }
         ];
