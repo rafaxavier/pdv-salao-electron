@@ -4,7 +4,7 @@
 const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron');
 
-const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/sqliteService')
+const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery')
 
 const createWindow = () => {
   // Create the browser window.
@@ -17,7 +17,7 @@ const createWindow = () => {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./src/pages/index.html')
+  mainWindow.loadFile('./src/pages/home/index.html')
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
@@ -64,10 +64,6 @@ ipcMain.on('editarClientes', async (event, { id, nome, telefone, cpf }) => {
   event.reply('editarClientesResult', feedBack);
 });
 
-
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
 // Algumas APIs podem ser usadas somente depois que este evento ocorre.
 app.whenReady().then(() => {
   createWindow()
