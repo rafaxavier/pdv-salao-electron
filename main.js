@@ -4,7 +4,8 @@
 const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron');
 
-const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery')
+const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery');
+const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery')
 
 const createWindow = () => {
   // Create the browser window.
@@ -23,6 +24,8 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools()
 }
 
+/* COMUNICADORES IPC PARA CHAMADAS DAS QUERYS*/
+// CLIENTES
 ipcMain.on('obterClientes', async (event) => {
   const clientes = await obterClientes(); // Chama a funcao do serviço SQLite para obter os clientes
   event.reply('obterClientesResult', { success: true, clientes }); // Envia os clientes de volta para o processo de renderização
@@ -33,7 +36,7 @@ ipcMain.on('criarClientes', async (event, { nome, telefone, cpf }) => {
   if (create === 1) {
     feedBack = { success: true, msg: 'cliente salvo com sucesso' }
   } else {
-    feedBack = { success: false, msg: 'cliente não deletado!' }
+    feedBack = { success: false, msg: 'cliente não criado!' }
   }
   event.reply('criarClientesResult', feedBack);
 });
@@ -63,6 +66,50 @@ ipcMain.on('editarClientes', async (event, { id, nome, telefone, cpf }) => {
 
   event.reply('editarClientesResult', feedBack);
 });
+
+// COLABORADORES
+ipcMain.on('obterColaboradores', async (event) => {
+  const colaboradores = await obterColaboradores();
+  event.reply('obterColaboradoresResult', { success: true, colaboradores });
+});
+
+ipcMain.on('criarColaboradores', async (event, { nome, profissao, cpf }) => {
+  const create = await criarColaborador(nome, profissao, cpf);
+  if (create === 1) {
+    feedBack = { success: true, msg: 'Colaborador salvo com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Colaborador não foi criado!' }
+  }
+  event.reply('criarColaboradoresResult', feedBack);
+});
+
+ipcMain.on('deletarColaboradores', async (event, { id }) => {
+  const del = await deletarColaborador(id);
+  let feedBack = {};
+
+  if (del === 1) {
+    feedBack = { success: true, msg: 'Colaborador deletado com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Colaborador não deletado!' }
+  }
+
+  event.reply('deletarColaboradoresResult', feedBack);
+});
+
+ipcMain.on('editarColaboradores', async (event, { id, nome, profissao, cpf }) => {
+  const update = await editarColaborador(id, nome, profissao, cpf);
+  let feedBack = {};
+
+  if (update === 1) {
+    feedBack = { success: true, msg: 'Colaborador atualizado com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Colaborador não atualizado!' }
+  }
+
+  event.reply('editarColaboradoresResult', feedBack);
+});
+
+
 
 // Algumas APIs podem ser usadas somente depois que este evento ocorre.
 app.whenReady().then(() => {
