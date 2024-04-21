@@ -30,10 +30,7 @@ function createDatabaseStructure() {
   });
 }
 
-// Verifica se o banco de dados existe e cria a estrutura se necessário
-// if (!db) {
-  createDatabaseStructure();
-// }
+createDatabaseStructure();
 
 // Função para obter todos os clientes
 const obterClientes = () => {

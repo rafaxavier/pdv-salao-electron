@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../components/navLoader.css">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="clientes.css">
     <title>Lista de Clientes</title>
 
 </head>
@@ -14,8 +15,8 @@
     <!-- Modal de Edição -->
     <div id="modal-editar-cliente" class="modal">
         <div class="modal-content">
-            <span id="close-modal-edita-cliente" class="close">&times;</span>
-            <h2 id="title-cliente">Editar Cliente</h2>
+            <span class="close">&times;</span>
+            <h2>Editar Cliente</h2>
             <input type="text" id="id-cliente" hidden>
             <div class="form-label">
                 <label for="edit-nome">Nome:</label>
@@ -41,7 +42,7 @@
     <div id="modal-criar-cliente" class="modal">
         <div class="modal-content">
             <span id="close-modal-cria-cliente" class="close">&times;</span>
-            <h2 id="title-cliente">Criar Cliente</h2>
+            <h2>Criar Cliente</h2>
             <div class="form-label">
                 <label for="nome-cliente">Nome:</label>
                 <input type="text" id="nome-cliente" name="nome-cliente" required>
@@ -65,7 +66,7 @@
 
     <div class="header"></div>
     <div class="conteiner-content">
-        <h2>Lista de Clientes teste</h2>
+        <h2>Lista de Clientes</h2>
 
         <!-- ### Add Cliente ### -->
         <button id="open-modal-cria-cliente" class="btn-success btn-md">Criar novo Cliente</button>
