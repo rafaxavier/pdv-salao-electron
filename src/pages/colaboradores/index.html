@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../components/navLoader.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="colaboradores.css">
+    <title>Lista de Colaboradores</title>
+
+</head>
+
+<body>
+    <!-- Modal de Edição -->
+    <div id="modal-editar-colaborador" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Colaborador</h2>
+            <input type="text" id="id-colaborador" hidden>
+            <div class="form-label">
+                <label for="edit-nome">Nome:</label>
+                <input type="text" id="edit-nome" name="edit-nome" required>
+            </div>
+            <div class="form-label">
+                <label for="edit-profissao">Profissão:</label>
+                <input type="text" id="edit-profissao" name="edit-profissao" type="text" required>
+            </div>
+            <div class="form-label">
+                <label for="edit-cpf">Cpf:</label>
+                <input type="text" id="edit-cpf" name="edit-cpf" type="text" maxlength="14" onkeyup="handleCpf(event)"
+                    required>
+            </div>
+            <div class="form-label">
+                <button class="btn-success btn-sm" onclick="atualizaColaborador()" type="button">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Adição -->
+    <div id="modal-cria-colaborador" class="modal">
+        <div class="modal-content">
+            <span id="close-modal-cria-colaborador" class="close">&times;</span>
+            <h2>Criar Colaborador</h2>
+            <div class="form-label">
+                <label for="nome-colaborador">Nome:</label>
+                <input type="text" id="nome-colaborador" name="nome-colaborador" required>
+            </div>
+            <div class="form-label">
+                <label for="profissao">Profissão:</label>
+                <input type="text" id="profissao" name="profissao" type="text">
+            </div>
+            <div class="form-label">
+                <label for="cpf-colaborador">Cpf:</label>
+                <input type="text" id="cpf-colaborador" name="cpf-colaborador" type="text" maxlength="14"
+                    onkeyup="handleCpf(event)" required>
+            </div>
+            <div class="form-label">
+                <button class="btn-success btn-lg" onclick="salvarColaborador()" type="button">Salvar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="header"></div>
+    <div class="conteiner-content">
+        <h2>Colaboradores</h2>
+
+        <!-- ### Add Colaborador ### -->
+        <button id="open-modal-cria-colaborador" class="btn-success btn-md">Criar novo Colaborador</button>
+
+        <input type="text" id="searchInput" placeholder="Pesquisar Colaborador...">
+        <hr>
+
+        <div id="content">
+            <!-- Os Colaboradores serão adicionados aqui dinamicamente -->
+        </div>
+    </div>
+
+    <script src="../../components/navLoader.js"></script>
+    <script src="../../../renderer.js"></script>
+    <script src="./colaboradores.js"></script>
+</body>
+
+</html>

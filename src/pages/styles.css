@@ -39,16 +39,6 @@ th {
   background-color: #f2f2f2;
 }
 
-#modal-criar-cliente {
-  display: none;
-
-}
-
-#modal-editar-cliente {
-  display: none;
-
-}
-
 .modal {
   position: fixed;
   z-index: 1;
