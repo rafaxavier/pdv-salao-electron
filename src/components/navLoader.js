@@ -23,6 +23,7 @@ const criarMenu = (paginaAtiva) => {
         const itensMenu = [
             { nome: 'Home', link: '../../pages/home/index.html' },
             { nome: 'Clientes', link: '../../pages/clientes/index.html' },
+            { nome: 'Colaboradores', link: '../../pages/colaboradores/index.html' },
             { nome: 'Serviços', link: '#' },
             { nome: 'Contato', link: '#' }
         ];
