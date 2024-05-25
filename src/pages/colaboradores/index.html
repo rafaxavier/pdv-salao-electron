@@ -12,36 +12,12 @@
 </head>
 
 <body>
-    <!-- Modal de Edição -->
-    <div id="modal-editar-colaborador" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Editar Colaborador</h2>
-            <input type="text" id="id-colaborador" hidden>
-            <div class="form-label">
-                <label for="edit-nome">Nome:</label>
-                <input type="text" id="edit-nome" name="edit-nome" required>
-            </div>
-            <div class="form-label">
-                <label for="edit-profissao">Profissão:</label>
-                <input type="text" id="edit-profissao" name="edit-profissao" type="text" required>
-            </div>
-            <div class="form-label">
-                <label for="edit-cpf">Cpf:</label>
-                <input type="text" id="edit-cpf" name="edit-cpf" type="text" maxlength="14" onkeyup="handleCpf(event)"
-                    required>
-            </div>
-            <div class="form-label">
-                <button class="btn-success btn-sm" onclick="atualizaColaborador()" type="button">Salvar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Adição -->
+    <!-- Modal de Adição e Edição-->
     <div id="modal-cria-colaborador" class="modal">
         <div class="modal-content">
             <span id="close-modal-cria-colaborador" class="close">&times;</span>
-            <h2>Criar Colaborador</h2>
+            <h2 id="title-modal">Criar Colaborador</h2>
+            <input type="text" id="id-colaborador" hidden>
             <div class="form-label">
                 <label for="nome-colaborador">Nome:</label>
                 <input type="text" id="nome-colaborador" name="nome-colaborador" required>
@@ -52,11 +28,10 @@
             </div>
             <div class="form-label">
                 <label for="cpf-colaborador">Cpf:</label>
-                <input type="text" id="cpf-colaborador" name="cpf-colaborador" type="text" maxlength="14"
-                    onkeyup="handleCpf(event)" required>
+                <input type="text" id="cpf-colaborador" name="cpf-colaborador" type="text" maxlength="14" required>
             </div>
             <div class="form-label">
-                <button class="btn-success btn-lg" onclick="salvarColaborador()" type="button">Salvar</button>
+                <button id="btn-salvar-colaborador" class="btn-success btn-lg" type="button">Salvar</button>
             </div>
 
         </div>
@@ -79,7 +54,7 @@
 
     <script src="../../components/navLoader.js"></script>
     <script src="../../../renderer.js"></script>
-    <script src="./colaboradores.js"></script>
+    <script type="module" src="./colaboradores.js"></script>
 </body>
 
 </html>
