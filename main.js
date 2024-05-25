@@ -74,13 +74,12 @@ ipcMain.on('obterColaboradores', async (event) => {
 });
 
 ipcMain.on('criarColaboradores', async (event, { nome, profissao, cpf }) => {
-  const create = await criarColaborador(nome, profissao, cpf);
-  if (create === 1) {
-    feedBack = { success: true, msg: 'Colaborador salvo com sucesso' }
-  } else {
-    feedBack = { success: false, msg: 'Colaborador não foi criado!' }
+  try {
+    await criarColaborador(nome, profissao, cpf);
+    event.reply('criarColaboradoresResult', { success: true, msg: 'Colaborador salvo com sucesso' });
+  } catch (error) {
+    event.reply('criarColaboradoresResult', { success: false, msg: 'Erro ao criar colaborador: ' + error.message });
   }
-  event.reply('criarColaboradoresResult', feedBack);
 });
 
 ipcMain.on('deletarColaboradores', async (event, { id }) => {

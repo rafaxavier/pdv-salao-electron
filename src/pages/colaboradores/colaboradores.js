@@ -1,5 +1,8 @@
+import { myToast } from '../../components/toast.js';
+import { cpfMask } from '../../utils/masks.js';
+
 // CRUD Requisicoes IPC
-const getAllColaboradores = () => {
+function getAllColaboradores() {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('obterColaboradores');
     window.electron.ipcRenderer.once('obterColaboradoresResult', (resposta) => {
@@ -8,17 +11,22 @@ const getAllColaboradores = () => {
   });
 };
 
-const createColaborador = (nome, profissao, cpf) => {
+function createColaborador(nome, profissao, cpf) {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('criarColaboradores', { nome, profissao, cpf });
     window.electron.ipcRenderer.once('criarColaboradoresResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
+      if (resposta.success) {
+        console.log(resposta);
+        resolve(resposta);
+      } else {
+        const erro = new Error(resposta.msg);
+        reject(erro);
+      }
     });
   });
 };
 
-const deleteColaborador = (id) => {
+function deleteColaborador(id) {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('deletarColaboradores', { id });
     window.electron.ipcRenderer.once('deletarColaboradoresResult', (resposta) => {
@@ -28,7 +36,7 @@ const deleteColaborador = (id) => {
   });
 };
 
-const updateColaborador = (id, nome, profissao, cpf) => {
+function updateColaborador(id, nome, profissao, cpf) {
   return new Promise((resolve, reject) => {
     window.electron.ipcRenderer.sendMessage('editarColaboradores', { id, nome, profissao, cpf });
     window.electron.ipcRenderer.once('editarColaboradoresResult', (resposta) => {
@@ -39,113 +47,100 @@ const updateColaborador = (id, nome, profissao, cpf) => {
 };
 
 /***************************************************************************************** */
-let todosColaboradores = [];
-const searchInput = document.getElementById('searchInput');
-
-searchInput.addEventListener('input', function () {
-  const searchText = this.value.toLowerCase();
-  const arr = todosColaboradores.filter(e => e.nome.toLowerCase().includes(searchText))
-  table.innerHTML = '';
-  criarListaDeColaboradores(arr);
-});
-
-// ####### mascaras para inputs
-function handlePhone(event) {
-  let input = event.target
-  input.value = phoneMask(input.value)
-}
-
-function phoneMask(value) {
-  if (!value) return ""
-  value = value.replace(/\D/g, '')
-  value = value.replace(/(\d{2})(\d)/, "($1) $2")
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2")
-  return value
-}
-
-function handleCpf(event) {
-  let input = event.target;
-  input.value = cpfMask(input.value);
-}
-
-function cpfMask(value) {
-  if (!value) return "";
-  value = value.replace(/\D/g, '');
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-  return value;
-}
-
-// ####### salvar colaborador
-const closeModalButton = document.getElementById('close-modal-cria-colaborador');
-closeModalButton.addEventListener('click', function() {
-    document.getElementById('modal-cria-colaborador').style.display = 'none';
-});
-
-const openModalButton = document.getElementById('open-modal-cria-colaborador');
-openModalButton.addEventListener('click', function() {
-    document.getElementById('modal-cria-colaborador').style.display = 'block';
-});
-
-async function salvarColaborador() {
-  const nome = document.getElementById('nome-colaborador');
-  const profissao = document.getElementById('profissao');
-  const cpf = document.getElementById('cpf-colaborador');
-
-  if (nome.value !== '' && profissao.value !== '' && cpf.value.length == 14) {
-    await createColaborador(nome.value, profissao.value, cpf.value);
-    nome.value = '';
-    profissao.value = '';
-    cpf.value = '';
-    document.getElementById('modal-cria-colaborador').style.display = 'none';
-    atualizarTabelaColaboradores();
+// ####### cria colaborador
+async function createEmployee() {
+  if (inputNome.value !== '' && inputProfissao.value !== '' && inputCpf.value.length == 14) {
+    await createColaborador(inputNome.value, inputProfissao.value, inputCpf.value)
+      .then((res) => {
+        clearInputFields();
+        modalColaborador.style.display = 'none';
+        myToast(res.msg, 'success');
+        refreshTableEmployees();
+      })
+      .catch((err) => {
+        modalColaborador.style.display = 'none';
+        myToast(err, 'error');
+        refreshTableEmployees();
+      });
   }
 }
 
-// ####### atualiza colaborador
-async function atualizaColaborador() {
-  const id = document.getElementById('id-colaborador').value;
-  const nome = document.getElementById('edit-nome').value;
-  const profissao = document.getElementById('edit-profissao').value;
-  const cpf = document.getElementById('edit-cpf').value;
-
-  if (nome !== '' && profissao !== '') {
-    await updateColaborador(id, nome, profissao, cpf);
-    document.getElementById('modal-editar-colaborador').style.display = "none";
-    atualizarTabelaColaboradores();
+// ####### editar colaborador
+async function updateEmployee() {
+  if (inputNome.value !== '' && inputProfissao.value !== '') {
+    await updateColaborador(inputID.value, inputNome.value, inputProfissao.value, inputCpf.value)
+      .then((res) => {
+        clearInputFields();
+        document.getElementById('modal-cria-colaborador').style.display = "none";
+        myToast(res.msg, 'success');
+        refreshTableEmployees();
+      })
+      .catch((err)=>{
+        modalColaborador.style.display = 'none';
+        myToast('err', 'error');
+        refreshTableEmployees();
+      });
   }
 }
 
 // ####### deleta colaborador
 async function deletaColaborador(id) {
   await deleteColaborador(id);
-  atualizarTabelaColaboradores();
+  myToast('deletado com sucesso!', 'success');
+  refreshTableEmployees();
 }
 
-// modal edite colaborador
-async function renderModalEditColaborador(id, nome, profissao, cpf) {
-  const modalEditar = document.getElementById('modal-editar-colaborador');
-  const span = document.getElementsByClassName("close")[0];
-  modalEditar.style.display = "block";
+let todosColaboradores = [];
 
-  document.getElementById('id-colaborador').value = id;
-  document.getElementById('edit-nome').value = nome;
-  document.getElementById('edit-profissao').value = profissao;
-  document.getElementById('edit-cpf').value = cpf;
-
-  span.addEventListener('click', () => {
-    modalEditar.style.display = "none";
-  })
-}
-
-
-// Função para criar listagem de colaboradores (table)
+const searchInput = document.getElementById('searchInput');
+const newEmployeeButton = document.getElementById("open-modal-cria-colaborador");
+const inputID = document.getElementById('id-colaborador');
+const inputNome = document.getElementById('nome-colaborador');
+const inputProfissao = document.getElementById('profissao');
+const inputCpf = document.getElementById('cpf-colaborador');
+const modalColaborador = document.getElementById('modal-cria-colaborador');
+const titleModal = document.getElementById('title-modal');
+const salvarColaborador = document.getElementById('btn-salvar-colaborador');
 const contentDiv = document.getElementById('content');
 const table = document.createElement('table');
 
-function criarListaDeColaboradores(colaboradores) {
-  console.log(colaboradores)
+function renderModal(colaborador = '') {
+  modalColaborador.style.display = "block";
+  const span = document.getElementsByClassName("close")[0];
+  const { id, nome, profissao, cpf } = colaborador;
+
+  if (id) {
+    titleModal.textContent = 'Editar Colaborador';
+    inputID.value = id;
+    inputNome.value = nome;
+    inputProfissao.value = profissao;
+    inputCpf.value = cpf;
+    salvarColaborador.removeEventListener('click', createEmployee);
+    salvarColaborador.addEventListener('click', updateEmployee);
+  } else {
+    salvarColaborador.removeEventListener('click', updateEmployee);
+    salvarColaborador.addEventListener('click', createEmployee);
+    titleModal.textContent = 'Criar Colaborador';
+    clearInputFields();
+  }
+
+
+  span.addEventListener('click', () => {
+    clearInputFields();
+    modalColaborador.style.display = "none";
+  });
+}
+
+function clearInputFields() {
+  inputID.value = '';
+  inputNome.value = '';
+  inputProfissao.value = '';
+  inputCpf.value = '';
+}
+
+async function criarListaDeColaboradores(colaboradores) {
+  table.innerHTML = '';
+
   const headerRow = document.createElement('tr');
   const th0 = document.createElement('th');
   const th1 = document.createElement('th');
@@ -165,7 +160,6 @@ function criarListaDeColaboradores(colaboradores) {
   headerRow.appendChild(th4);
   table.appendChild(headerRow);
 
-  // Adiciona cada colaborador como uma linha na tabela
   colaboradores.forEach(colaborador => {
     const row = document.createElement('tr');
     const column0 = document.createElement('td');
@@ -187,8 +181,7 @@ function criarListaDeColaboradores(colaboradores) {
     deleteButton.classList.add('btn-danger', 'btn-sm')
 
     deleteButton.addEventListener('click', () => deletaColaborador(colaborador.id));
-
-    editButton.addEventListener('click', () => renderModalEditColaborador(colaborador.id, colaborador.nome, colaborador.profissao, colaborador.cpf));
+    editButton.addEventListener('click', () => renderModal(colaborador));
 
     column4.appendChild(editButton);
     column4.appendChild(deleteButton);
@@ -199,21 +192,18 @@ function criarListaDeColaboradores(colaboradores) {
     row.appendChild(column3);
     row.appendChild(column4);
 
-    // Adiciona a linha à tabela
     table.appendChild(row);
   });
 
-  // Adiciona a tabela ao conteúdo da página
-  contentDiv.innerHTML = ''; // Limpa o conteúdo da div
+  contentDiv.innerHTML = '';
   contentDiv.appendChild(table);
 };
 
-/**-------------------------------------------------------------------------------------- */
-function atualizarTabelaColaboradores() {
-  // Limpa o conteúdo da tabela
-  searchInput.value = ''; // Limpa o conteúdo da tabela
+function refreshTableEmployees() {
+  searchInput.value = '';
   table.innerHTML = '';
-  // Obtém a lista atualizada de colaboradores e recria a tabela
+  table.textContent = '';
+
   getAllColaboradores()
     .then(colaboradores => {
       todosColaboradores = colaboradores
@@ -224,20 +214,24 @@ function atualizarTabelaColaboradores() {
     });
 };
 
-
+// Adicionar event listeners dentro do evento 'DOMContentLoaded'
 window.addEventListener('DOMContentLoaded', () => {
+  getAllColaboradores()
+    .then(colaboradores => {
+      todosColaboradores = colaboradores
+      criarListaDeColaboradores(todosColaboradores);
 
-  getAllColaboradores().then(colaboradores => {
-    todosColaboradores = colaboradores
-    criarListaDeColaboradores(todosColaboradores);
-  }).catch(error => {
-    console.error('Erro ao carregar colaboradores:', error);
-  });
+      // Adicionar event listeners aqui
+      newEmployeeButton.addEventListener("click", renderModal);
+      salvarColaborador.addEventListener('click', createEmployee);
+      inputCpf.addEventListener('input', async (e) => {
+        let cpfFormatado = cpfMask(inputCpf.value);
+        inputCpf.value = cpfFormatado;
+      });
+    })
+    .catch(error => {
+      console.error('Erro ao carregar colaboradores:', error);
+    });
 
   criarMenu('Colaboradores');
-
-  // Atualiza a tabela
-  table.innerHTML = ''; // Limpa o conteúdo da tabela
-
 });
-
