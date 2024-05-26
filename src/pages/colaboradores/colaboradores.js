@@ -75,7 +75,7 @@ async function updateEmployee() {
         myToast(res.msg, 'success');
         refreshTableEmployees();
       })
-      .catch((err)=>{
+      .catch((err) => {
         modalColaborador.style.display = 'none';
         myToast('err', 'error');
         refreshTableEmployees();
@@ -103,6 +103,17 @@ const titleModal = document.getElementById('title-modal');
 const salvarColaborador = document.getElementById('btn-salvar-colaborador');
 const contentDiv = document.getElementById('content');
 const table = document.createElement('table');
+
+let debounceTimeout;
+searchInput.addEventListener('input', function () {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    const searchText = this.value.toLowerCase();
+    const arr = todosColaboradores.filter(e => e.nome.toLowerCase().includes(searchText));
+    table.innerHTML = '';
+    criarListaDeColaboradores(arr);
+  }, 300);
+});
 
 function renderModal(colaborador = '') {
   modalColaborador.style.display = "block";
@@ -214,24 +225,28 @@ function refreshTableEmployees() {
     });
 };
 
-// Adicionar event listeners dentro do evento 'DOMContentLoaded'
-window.addEventListener('DOMContentLoaded', () => {
+function initialize() {
   getAllColaboradores()
     .then(colaboradores => {
       todosColaboradores = colaboradores
       criarListaDeColaboradores(todosColaboradores);
+      addEventListeners();
 
-      // Adicionar event listeners aqui
-      newEmployeeButton.addEventListener("click", renderModal);
-      salvarColaborador.addEventListener('click', createEmployee);
-      inputCpf.addEventListener('input', async (e) => {
-        let cpfFormatado = cpfMask(inputCpf.value);
-        inputCpf.value = cpfFormatado;
-      });
     })
     .catch(error => {
       console.error('Erro ao carregar colaboradores:', error);
     });
 
   criarMenu('Colaboradores');
-});
+}
+
+function addEventListeners() {
+  newEmployeeButton.addEventListener("click", renderModal);
+  salvarColaborador.addEventListener('click', createEmployee);
+  inputCpf.addEventListener('input', async (e) => {
+    let cpfFormatado = cpfMask(inputCpf.value);
+    inputCpf.value = cpfFormatado;
+  });
+}
+
+window.addEventListener('DOMContentLoaded', initialize);
