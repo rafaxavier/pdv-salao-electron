@@ -1,3 +1,6 @@
+import { myToast } from '../../components/toast.js';
+import { cpfMask, phoneMask } from '../../utils/masks.js';
+
 // CRUD Requisicoes IPC
 const getAllClientes = () => {
   return new Promise((resolve, reject) => {
@@ -39,112 +42,111 @@ const updateCliente = (id, nome, telefone, cpf) => {
 };
 
 /***************************************************************************************** */
-let todosClientes = [];
-const searchInput = document.getElementById('searchInput');
-
-searchInput.addEventListener('input', function () {
-  const searchText = this.value.toLowerCase();
-  const arr = todosClientes.filter(e => e.nome.toLowerCase().includes(searchText))
-  table.innerHTML = '';
-  criarListaDeClientes(arr);
-});
-
-// ####### mascaras para inputs
-function handlePhone(event) {
-  let input = event.target
-  input.value = phoneMask(input.value)
-}
-
-function phoneMask(value) {
-  if (!value) return ""
-  value = value.replace(/\D/g, '')
-  value = value.replace(/(\d{2})(\d)/, "($1) $2")
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2")
-  return value
-}
-
-function handleCpf(event) {
-  let input = event.target;
-  input.value = cpfMask(input.value);
-}
-
-function cpfMask(value) {
-  if (!value) return "";
-  value = value.replace(/\D/g, '');
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-  return value;
-}
-
-// ####### salvar cliente
-const closeModalButton = document.getElementById('close-modal-cria-cliente');
-closeModalButton.addEventListener('click', function() {
-    document.getElementById('modal-criar-cliente').style.display = 'none';
-});
-
-const openModalButton = document.getElementById('open-modal-cria-cliente');
-openModalButton.addEventListener('click', function() {
-    document.getElementById('modal-criar-cliente').style.display = 'block';
-});
-
-async function salvarCliente() {
-  const nome = document.getElementById('nome-cliente');
-  const telefone = document.getElementById('telefone-cliente');
-  const cpf = document.getElementById('cpf-cliente');
-
-  if (nome.value !== '' && telefone.value !== '' && telefone.value.length >= 14 && cpf.value.length == 14) {
-    await createCliente(nome.value, telefone.value, cpf.value);
-    nome.value = '';
-    telefone.value = '';
-    cpf.value = '';
-    document.getElementById('modal-criar-cliente').style.display = 'none';
-    atualizarTabelaClientes();
+// ####### cria cliente
+async function createClient() {
+  if (inputNome.value !== ''  && inputPhone.value.length > 14 && inputCpf.value.length == 14) {
+    await createCliente(inputNome.value,  inputPhone.value, inputCpf.value)
+      .then((res) => {
+        clearInputFields();
+        modalCliente.style.display = 'none';
+        myToast(res.msg, 'success');
+        refreshTableEmployees();
+      })
+      .catch((err) => {
+        modalCliente.style.display = 'none';
+        myToast(err, 'error');
+        refreshTableEmployees();
+      });
   }
 }
 
-// ####### atualiza cliente
-async function atualizaCliente() {
-  const id = document.getElementById('id-cliente').value;
-  const nome = document.getElementById('edit-nome').value;
-  const telefone = document.getElementById('edit-telefone').value;
-  const cpf = document.getElementById('edit-cpf').value;
-
-  if (nome !== '' && telefone !== '' && telefone.length >= 14 && cpf.length == 14) {
-    await updateCliente(id, nome, telefone, cpf);
-    document.getElementById('modal-editar-cliente').style.display = "none";
-    atualizarTabelaClientes();
+// ####### editar cliente
+async function updateEmployee() {
+  if (inputNome.value !== '' ) {
+    await updateCliente(inputID.value, inputNome.value, inputPhone.value, inputCpf.value)
+      .then((res) => {
+        clearInputFields();
+        document.getElementById('modal-cria-cliente').style.display = "none";
+        myToast(res.msg, 'success');
+        refreshTableEmployees();
+      })
+      .catch((err) => {
+        modalCliente.style.display = 'none';
+        myToast('err', 'error');
+        refreshTableEmployees();
+      });
   }
 }
 
 // ####### deleta cliente
 async function deletaCliente(id) {
   await deleteCliente(id);
-  atualizarTabelaClientes();
+  myToast('deletado com sucesso!', 'success');
+  refreshTableEmployees();
 }
 
-// modal edite cliente
-async function renderModalEditCliente(id, nome, telefone, cpf) {
-  const modalEditar = document.getElementById('modal-editar-cliente');
-  const span = document.getElementsByClassName("close")[0];
-  modalEditar.style.display = "block";
+let todosClientes = [];
 
-  document.getElementById('id-cliente').value = id;
-  document.getElementById('edit-nome').value = nome;
-  document.getElementById('edit-telefone').value = telefone;
-  document.getElementById('edit-cpf').value = cpf;
-
-  span.addEventListener('click', () => {
-    modalEditar.style.display = "none";
-  })
-}
-
-
-// Função para criar listagem de clientes (table)
+const searchInput = document.getElementById('searchInput');
+const newEmployeeButton = document.getElementById("open-modal-cria-cliente");
+const inputID = document.getElementById('id-cliente');
+const inputNome = document.getElementById('nome-cliente');
+const inputPhone = document.getElementById('telefone-cliente');
+const inputCpf = document.getElementById('cpf-cliente');
+const modalCliente = document.getElementById('modal-cria-cliente');
+const titleModal = document.getElementById('title-modal');
+const salvarCliente = document.getElementById('btn-salvar-cliente');
 const contentDiv = document.getElementById('content');
 const table = document.createElement('table');
 
-function criarListaDeClientes(clientes) {
+let debounceTimeout;
+searchInput.addEventListener('input', function () {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    const searchText = this.value.toLowerCase();
+    const arr = todosClientes.filter(e => e.nome.toLowerCase().includes(searchText));
+    table.innerHTML = '';
+    criarListaDeClientes(arr);
+  }, 300);
+});
+
+function renderModal(cliente = '') {
+  modalCliente.style.display = "block";
+  const span = document.getElementsByClassName("close")[0];
+  const { id, nome, telefone, cpf } = cliente;
+
+  if (id) {
+    titleModal.textContent = 'Editar Cliente';
+    inputID.value = id;
+    inputNome.value = nome;
+    inputPhone.value = telefone;
+    inputCpf.value = cpf;
+    salvarCliente.removeEventListener('click', createClient);
+    salvarCliente.addEventListener('click', updateEmployee);
+  } else {
+    salvarCliente.removeEventListener('click', updateEmployee);
+    salvarCliente.addEventListener('click', createClient);
+    titleModal.textContent = 'Criar Cliente';
+    clearInputFields();
+  }
+
+
+  span.addEventListener('click', () => {
+    clearInputFields();
+    modalCliente.style.display = "none";
+  });
+}
+
+function clearInputFields() {
+  inputID.value = '';
+  inputNome.value = '';
+  inputPhone.value = '';
+  inputCpf.value = '';
+}
+
+async function criarListaDeClientes(clientes) {
+  table.innerHTML = '';
+
   const headerRow = document.createElement('tr');
   const th0 = document.createElement('th');
   const th1 = document.createElement('th');
@@ -164,7 +166,6 @@ function criarListaDeClientes(clientes) {
   headerRow.appendChild(th4);
   table.appendChild(headerRow);
 
-  // Adiciona cada cliente como uma linha na tabela
   clientes.forEach(cliente => {
     const row = document.createElement('tr');
     const column0 = document.createElement('td');
@@ -186,8 +187,7 @@ function criarListaDeClientes(clientes) {
     deleteButton.classList.add('btn-danger', 'btn-sm')
 
     deleteButton.addEventListener('click', () => deletaCliente(cliente.id));
-
-    editButton.addEventListener('click', () => renderModalEditCliente(cliente.id, cliente.nome, cliente.telefone, cliente.cpf));
+    editButton.addEventListener('click', () => renderModal(cliente));
 
     column4.appendChild(editButton);
     column4.appendChild(deleteButton);
@@ -198,21 +198,18 @@ function criarListaDeClientes(clientes) {
     row.appendChild(column3);
     row.appendChild(column4);
 
-    // Adiciona a linha à tabela
     table.appendChild(row);
   });
 
-  // Adiciona a tabela ao conteúdo da página
-  contentDiv.innerHTML = ''; // Limpa o conteúdo da div
+  contentDiv.innerHTML = '';
   contentDiv.appendChild(table);
 };
 
-/**-------------------------------------------------------------------------------------- */
-function atualizarTabelaClientes() {
-  // Limpa o conteúdo da tabela
-  searchInput.value = ''; // Limpa o conteúdo da tabela
+function refreshTableEmployees() {
+  searchInput.value = '';
   table.innerHTML = '';
-  // Obtém a lista atualizada de clientes e recria a tabela
+  table.textContent = '';
+
   getAllClientes()
     .then(clientes => {
       todosClientes = clientes
@@ -223,20 +220,32 @@ function atualizarTabelaClientes() {
     });
 };
 
+function initialize() {
+  getAllClientes()
+    .then(clientes => {
+      todosClientes = clientes
+      criarListaDeClientes(todosClientes);
+      addEventListeners();
 
-window.addEventListener('DOMContentLoaded', () => {
-
-  getAllClientes().then(clientes => {
-    todosClientes = clientes
-    criarListaDeClientes(todosClientes);
-  }).catch(error => {
-    console.error('Erro ao carregar clientes:', error);
-  });
+    })
+    .catch(error => {
+      console.error('Erro ao carregar clientes:', error);
+    });
 
   criarMenu('Clientes');
+}
 
-  // Atualiza a tabela
-  table.innerHTML = ''; // Limpa o conteúdo da tabela
+function addEventListeners() {
+  newEmployeeButton.addEventListener("click", renderModal);
+  salvarCliente.addEventListener('click', createClient);
+  inputPhone.addEventListener('input', async (e) => {
+    let phoneFormatado = phoneMask(inputPhone.value);
+    inputPhone.value = phoneFormatado;
+  });
+  inputCpf.addEventListener('input', async (e) => {
+    let cpfFormatado = cpfMask(inputCpf.value);
+    inputCpf.value = cpfFormatado;
+  });
+}
 
-});
-
+window.addEventListener('DOMContentLoaded', initialize);

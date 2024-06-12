@@ -13,52 +13,25 @@
 
 <body>
     <!-- Modal de Edição -->
-    <div id="modal-editar-cliente" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Editar Cliente</h2>
-            <input type="text" id="id-cliente" hidden>
-            <div class="form-label">
-                <label for="edit-nome">Nome:</label>
-                <input type="text" id="edit-nome" name="edit-nome" required>
-            </div>
-            <div class="form-label">
-                <label for="edit-telefone">Telefone:</label>
-                <input type="text" id="edit-telefone" name="edit-telefone" type="tel" maxlength="15"
-                    onkeyup="handlePhone(event)" required>
-            </div>
-            <div class="form-label">
-                <label for="edit-cpf">Cpf:</label>
-                <input type="text" id="edit-cpf" name="edit-cpf" type="text" maxlength="14" onkeyup="handleCpf(event)"
-                    required>
-            </div>
-            <div class="form-label">
-                <button class="btn-success btn-sm" onclick="atualizaCliente()" type="button">Salvar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Adição -->
-    <div id="modal-criar-cliente" class="modal">
+    <div id="modal-cria-cliente" class="modal">
         <div class="modal-content">
             <span id="close-modal-cria-cliente" class="close">&times;</span>
-            <h2>Criar Cliente</h2>
+            <h2 id="title-modal">Criar Cliente</h2>
+            <input type="text" id="id-cliente" hidden>
             <div class="form-label">
                 <label for="nome-cliente">Nome:</label>
                 <input type="text" id="nome-cliente" name="nome-cliente" required>
             </div>
             <div class="form-label">
                 <label for="telefone-cliente">Telefone:</label>
-                <input type="text" id="telefone-cliente" name="telefone-cliente" type="tel" maxlength="15"
-                    onkeyup="handlePhone(event)" required>
+                <input type="text" id="telefone-cliente" name="telefone-cliente" type="tel" maxlength="15" required>
             </div>
             <div class="form-label">
                 <label for="cpf-cliente">Cpf:</label>
-                <input type="text" id="cpf-cliente" name="cpf-cliente" type="text" maxlength="14"
-                    onkeyup="handleCpf(event)" required>
+                <input type="text" id="cpf-cliente" name="cpf-cliente" type="text" maxlength="14" required>
             </div>
             <div class="form-label">
-                <button class="btn-success btn-lg" onclick="salvarCliente()" type="button">Salvar</button>
+                <button id="btn-salvar-cliente" class="btn-success btn-lg" type="button">Salvar</button>
             </div>
 
         </div>
@@ -81,7 +54,7 @@
 
     <script src="../../components/navLoader.js"></script>
     <script src="../../../renderer.js"></script>
-    <script src="./clientes.js"></script>
+    <script type="module" src="./clientes.js"></script>
 </body>
 
 </html>
