@@ -1,47 +1,7 @@
-import { myToast } from '../../components/toast.js';
-import { cpfMask, phoneMask } from '../../utils/masks.js';
+import { myToast } from '../components/toast.js';
+import { cpfMask, phoneMask } from '../utils/masks.js';
+import { createCliente, getAllClientes, deleteCliente, updateCliente } from '../requests/clientes-ipc.js';
 
-// CRUD Requisicoes IPC
-const getAllClientes = () => {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('obterClientes');
-    window.electron.ipcRenderer.once('obterClientesResult', (resposta) => {
-      resolve(resposta.clientes);
-    });
-  });
-};
-
-const createCliente = (nome, telefone, cpf) => {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('criarClientes', { nome, telefone, cpf });
-    window.electron.ipcRenderer.once('criarClientesResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
-    });
-  });
-};
-
-const deleteCliente = (id) => {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('deletarClientes', { id });
-    window.electron.ipcRenderer.once('deletarClientesResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
-    });
-  });
-};
-
-const updateCliente = (id, nome, telefone, cpf) => {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('editarClientes', { id, nome, telefone, cpf });
-    window.electron.ipcRenderer.once('editarClientesResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
-    });
-  });
-};
-
-/***************************************************************************************** */
 // ####### cria cliente
 async function createClient() {
   if (inputNome.value !== ''  && inputPhone.value.length > 14 && inputCpf.value.length == 14) {

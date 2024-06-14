@@ -1,52 +1,7 @@
-import { myToast } from '../../components/toast.js';
-import { cpfMask } from '../../utils/masks.js';
+import { myToast } from '../components/toast.js';
+import { createColaborador, deleteColaborador, getAllColaboradores, updateColaborador } from '../requests/colaboradores-ipc.js';
+import { cpfMask } from '../utils/masks.js';
 
-// CRUD Requisicoes IPC
-function getAllColaboradores() {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('obterColaboradores');
-    window.electron.ipcRenderer.once('obterColaboradoresResult', (resposta) => {
-      resolve(resposta.colaboradores);
-    });
-  });
-};
-
-function createColaborador(nome, profissao, cpf) {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('criarColaboradores', { nome, profissao, cpf });
-    window.electron.ipcRenderer.once('criarColaboradoresResult', (resposta) => {
-      if (resposta.success) {
-        console.log(resposta);
-        resolve(resposta);
-      } else {
-        const erro = new Error(resposta.msg);
-        reject(erro);
-      }
-    });
-  });
-};
-
-function deleteColaborador(id) {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('deletarColaboradores', { id });
-    window.electron.ipcRenderer.once('deletarColaboradoresResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
-    });
-  });
-};
-
-function updateColaborador(id, nome, profissao, cpf) {
-  return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('editarColaboradores', { id, nome, profissao, cpf });
-    window.electron.ipcRenderer.once('editarColaboradoresResult', (resposta) => {
-      console.log(resposta);
-      resolve(resposta);
-    });
-  });
-};
-
-/***************************************************************************************** */
 // ####### cria colaborador
 async function createEmployee() {
   if (inputNome.value !== '' && inputProfissao.value !== '' && inputCpf.value.length == 14) {
