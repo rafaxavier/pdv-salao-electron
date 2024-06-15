@@ -24,7 +24,7 @@ const criarMenu = (paginaAtiva) => {
             { nome: 'Home', link: '../../views/home/index.html' },
             { nome: 'Clientes', link: '../../views/clientes/index.html' },
             { nome: 'Colaboradores', link: '../../views/colaboradores/index.html' },
-            { nome: 'Serviços', link: '#' },
+            { nome: 'Serviços', link: '../../views/servicos/index.html' },
             { nome: 'Contato', link: '#' }
         ];
 
