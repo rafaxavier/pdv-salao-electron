@@ -194,7 +194,6 @@ function initialize() {
     .then(servicos => {
       todosServicos = servicos
       criarListaDeServicos(todosServicos);
-      console.log(todosServicos)
       addEventListeners();
 
     })
