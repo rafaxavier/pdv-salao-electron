@@ -25,7 +25,6 @@ const criarMenu = (paginaAtiva) => {
             { nome: 'Clientes', link: '../../views/clientes/index.html' },
             { nome: 'Colaboradores', link: '../../views/colaboradores/index.html' },
             { nome: 'Serviços', link: '../../views/servicos/index.html' },
-            { nome: 'Contato', link: '#' }
         ];
 
         // Cria um item de menu para cada elemento no array 'itensMenu'
