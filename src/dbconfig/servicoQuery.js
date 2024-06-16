@@ -8,8 +8,7 @@ function createDatabaseStructure() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         preco REAL,
-        taxa REAL,
-        
+        taxa REAL
       )
     `);
 
