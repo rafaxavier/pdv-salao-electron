@@ -5,7 +5,8 @@ const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron');
 
 const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery');
-const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery')
+const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery');
+const { obterServicos, editarServico, criarServico, deletarServico } = require('./src/dbconfig/servicoQuery');
 
 const createWindow = () => {
   // Create the browser window.
@@ -108,7 +109,46 @@ ipcMain.on('editarColaboradores', async (event, { id, nome, profissao, cpf }) =>
   event.reply('editarColaboradoresResult', feedBack);
 });
 
+// SERVICOS
+ipcMain.on('obterServicos', async (event) => {
+  const servicos = await obterServicos();
+  event.reply('obterServicosResult', { success: true, servicos });
+});
 
+ipcMain.on('criarServicos', async (event, { nome, preco, taxa }) => {
+  try {
+    await criarServico(nome, preco, taxa);
+    event.reply('criarServicosResult', { success: true, msg: 'Serviço salvo com sucesso' });
+  } catch (error) {
+    event.reply('criarServicosResult', { success: false, msg: 'Erro ao criar serviço: ' + error.message });
+  }
+});
+
+ipcMain.on('deletarServicos', async (event, { id }) => {
+  const del = await deletarServico(id);
+  let feedBack = {};
+
+  if (del === 1) {
+    feedBack = { success: true, msg: 'Serviço deletado com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Serviço não deletado!' }
+  }
+
+  event.reply('deletarServicosResult', feedBack);
+});
+
+ipcMain.on('editarServicos', async (event, { id, nome, preco, taxa }) => {
+  const update = await editarServico(id, nome, preco, taxa);
+  let feedBack = {};
+
+  if (update === 1) {
+    feedBack = { success: true, msg: 'Serviço atualizado com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Serviço não atualizado!' }
+  }
+
+  event.reply('editarServicosResult', feedBack);
+});
 
 // Algumas APIs podem ser usadas somente depois que este evento ocorre.
 app.whenReady().then(() => {
