@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../components/navLoader.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="servicos.css">
+    <title>Lista de Serviços</title>
+
+</head>
+
+<body>
+    <!-- Modal de Adição e Edição-->
+    <div id="modal-cria-servico" class="modal">
+        <div class="modal-content">
+            <span id="close-modal-cria-servico" class="close">&times;</span>
+            <h2 id="title-modal">Criar Servico</h2>
+            <input type="text" id="id-servico" hidden>
+            <div class="form-label">
+                <label for="nome-servico">Nome:</label>
+                <input type="text" id="nome-servico" name="nome-servico" required>
+            </div>
+            <div class="form-label">
+                <label for="preco">Preço:</label>
+                <input type="text" id="preco" name="preco" type="text">
+            </div>
+            <div class="form-label">
+                <label for="taxa">Taxa:</label>
+                <input type="text" id="taxa" name="taxa" type="text" maxlength="14" required>
+            </div>
+            <div class="form-label">
+                <button id="btn-salvar-servico" class="btn-success btn-lg" type="button">Salvar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="header"></div>
+    <div class="conteiner-content">
+        <h2>Serviços</h2>
+
+        <!-- ### Add Serviço ### -->
+        <button id="open-modal-cria-servico" class="btn-success btn-md">Criar novo Serviço</button>
+
+        <input type="text" id="searchInput" placeholder="Pesquisar Serviço...">
+        <hr>
+
+        <div id="content">
+            <!-- Os Serviços serão adicionados aqui dinamicamente -->
+        </div>
+    </div>
+
+    <script src="../../components/navLoader.js"></script>
+    <script src="../../../renderer.js"></script>
+    <script type="module" src="../../service/servicos.js"></script>
+</body>
+
+</html>
