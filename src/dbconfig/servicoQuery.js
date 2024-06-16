@@ -43,9 +43,9 @@ const obterServicos = () => {
   });
 };
 
-const criarService = async (nome, preco, taxa) => {
+const criarServico = async (nome, preco, taxa) => {
   return new Promise((resolve, reject) => {
-    db.run('INSERT INTO servico (nome, preco, taxa) VALUES (?, ?, ?)', [nome, preco, taxa], function (err) {
+    db.run('INSERT INTO servicos (nome, preco, taxa) VALUES (?, ?, ?)', [nome, preco, taxa], function (err) {
       if (err) {
         console.log(err)
         reject(err);
@@ -84,7 +84,7 @@ const editarServico = async (id, nome, preco, taxa) => {
 
 module.exports = {
   obterServicos,
-  criarService,
+  criarServico,
   deletarServico,
   editarServico
 };
