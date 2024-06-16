@@ -1,38 +1,57 @@
 /* Estilos específicos para o navLoader */
+/* Variáveis CSS para facilitar a manutenção */
+:root {
+  --bg-gradient-start: rgb(48, 27, 141);
+  --bg-gradient-middle: rgb(83, 13, 129);
+  --bg-gradient-end: rgba(61, 2, 42, 0.425);
+  --link-color: white;
+  --link-hover-bg: #487fd1b2;
+  --border-color: #ffffff;
+  --transition-duration: 0.3s;
+  --link-padding: 10px;
+  --link-margin: 10px;
+  --link-border-radius: 10px;
+}
+
+/* Estilos específicos para o navLoader */
 .header {
-  /* background: rgb(66, 7, 105); */
-  background: linear-gradient(180deg, rgb(48, 27, 141) 5%, rgb(83, 13, 129) 50%, rgba(61, 2, 42, 0.425) 100%);
-  /* background-color: gradiente(); */
-  /* Exemplo de cor de fundo para o cabeçalho */
-  padding: 0px;
-  /* width: 250px; */
+  background: linear-gradient(180deg, var(--bg-gradient-start) 5%, var(--bg-gradient-middle) 50%, var(--bg-gradient-end) 100%);
+  padding: 0;
   height: 100vh;
   display: flex;
 }
 
-.header nav ul {
+.header nav ul,
+.header nav div {
   width: 220px;
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.header nav ul li a {
+.header nav ul li a,
+.header nav div li a {
   display: flex;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid var(--border-color);
   text-decoration: none;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+  color: var(--link-color);
+  padding: var(--link-padding);
+  margin: var(--link-margin);
+  border-radius: var(--link-border-radius);
+  transition: background-color var(--transition-duration) ease;
 }
 
-.header nav ul li a.active {
-  background-color: #487fd1b2;
+.header nav ul li a.active,
+.header nav div li a.active {
+  background-color: var(--link-hover-bg);
 }
 
-.header nav ul li a:hover {
+.header nav ul li a:hover,
+.header nav div li a:hover {
   font-weight: bold;
-  background-color: #487fd1b2;
+  background-color: var(--link-hover-bg);
+}
+
+.hidden {
+  display: none;
 }

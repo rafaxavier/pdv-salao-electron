@@ -2,53 +2,77 @@
 
 // Função para criar o menu
 const criarMenu = (paginaAtiva) => {
+  console.log(paginaAtiva);
+  const cabecalhos = document.getElementsByClassName('header');
 
-    console.log(paginaAtiva)
-    // Obtém todos os elementos com a classe 'header'
-    const cabecalhos = document.getElementsByClassName('header');
+  if (cabecalhos.length > 0 && cabecalhos[0].querySelector('nav')) {
+    return;
+  }
 
-    // Verifica se o menu já foi criado para evitar duplicação
-    if (cabecalhos.length > 0 && cabecalhos[0].querySelector('nav')) {
-        return; // Se o menu já existe, interrompe a execução da função
+  for (const cabecalho of cabecalhos) {
+    let header = document.createElement('header');
+    let nav = document.createElement('nav');
+    let ul = document.createElement('ul');
+    let boxConfig = document.createElement('div');
+    let li_config = document.createElement('li');
+    let a_config = document.createElement('a');
+    a_config.href = '#'; // Pode ser '#' para não redirecionar
+    a_config.textContent = 'Configuração';
+
+    // Adicione a classe hidden inicialmente para ocultar os itens
+    boxConfig.classList.add('hidden');
+
+    const itensMenu = [
+      { nome: 'Home', link: '../../views/home/index.html' },
+      { nome: 'Clientes', link: '../../views/clientes/index.html' },
+      { nome: 'Colaboradores', link: '../../views/colaboradores/index.html' },
+      { nome: 'Serviços', link: '../../views/servicos/index.html' },
+    ];
+
+    for (const item of itensMenu) {
+      let li = document.createElement('li');
+      let a = document.createElement('a');
+      a.href = item.link;
+      a.textContent = item.nome;
+
+      if (item.nome === paginaAtiva) {
+        a.classList.add('active');
+      }
+
+      li.appendChild(a);
+      if (item.nome === 'Clientes' || item.nome === 'Colaboradores' || item.nome === 'Serviços') {
+        boxConfig.appendChild(li);
+      } else {
+        ul.appendChild(li);
+      }
     }
 
-    // Loop através de cada elemento com a classe 'header'
-    for (const cabecalho of cabecalhos) {
-        // Cria os elementos do menu
-        let header = document.createElement('header');
-        let nav = document.createElement('nav');
-        let ul = document.createElement('ul');
+    // Adicione o botão 'configs' fora do 'boxConfig'
+    li_config.appendChild(a_config);
+    ul.appendChild(li_config);
 
-        // Array de itens do menu com seus respectivos links
-        const itensMenu = [
-            { nome: 'Home', link: '../../views/home/index.html' },
-            { nome: 'Clientes', link: '../../views/clientes/index.html' },
-            { nome: 'Colaboradores', link: '../../views/colaboradores/index.html' },
-            { nome: 'Serviços', link: '../../views/servicos/index.html' },
-        ];
+    nav.appendChild(ul);
+    nav.appendChild(boxConfig);
+    header.appendChild(nav);
+    cabecalho.appendChild(header);
 
-        // Cria um item de menu para cada elemento no array 'itensMenu'
-        for (const item of itensMenu) {
-            let li = document.createElement('li');
-            let a = document.createElement('a');
-            a.href = item.link; // Define o link conforme necessário
-            a.textContent = item.nome;
+    // Adicione o event listener para a_config
+    a_config.addEventListener('click', (event) => {
+      event.preventDefault(); // Previne o comportamento padrão do link
+      if (paginaAtiva !== 'Home') {
+        // Exibir links de configuração
+        boxConfig.classList.remove('hidden');
+      } else {
+        // Alternar visibilidade dos links de configuração
+        boxConfig.classList.toggle('hidden');
+      }
+    });
 
-            // Verifica se o nome da página corresponde ao nome da página ativa
-            if (item.nome === paginaAtiva) {
-                a.classList.add('active');
-            }
-
-            li.appendChild(a);
-            ul.appendChild(li);
-        }
-
-        // Adiciona os elementos do menu ao documento HTML
-        nav.appendChild(ul);
-        header.appendChild(nav);
-        cabecalho.appendChild(header);
+    // Verifique se a página ativa é 'Home' e se boxConfig está escondido
+    if (paginaAtiva === 'Home') {
+      boxConfig.classList.add('hidden');
+    } else {
+      boxConfig.classList.remove('hidden');
     }
-
+  }
 };
-
-
