@@ -1,72 +1,75 @@
 import { myToast } from '../components/toast.js';
-import { 
-  createServico, 
-  deleteServico, 
-  getAllServicos, 
+import {
+  createServico,
+  deleteServico,
+  getAllServicos,
   updateServico
- } from '../requests/servicos-ipc.js';
-import { moneyMask, percentMask, unmaskMoney, unmaskPercent} from '../utils/masks.js';
+} from '../requests/servicos-ipc.js';
+import { getAllColaboradores } from '../requests/colaboradores-ipc.js';
+import { getAllClientes } from '../requests/clientes-ipc.js';
+import { moneyMask, percentMask, unmaskMoney, unmaskPercent } from '../utils/masks.js';
 
 // ####### cria serviço
 async function createService() {
-  if (inputNome.value !== '' && inputPreco.value !== '' && inputTaxa.value !== '') {
-    const precoDesformatado = unmaskMoney(inputPreco.value);
-    const taxaDesformatado = unmaskPercent(inputTaxa.value);
-    await createServico(inputNome.value, precoDesformatado, taxaDesformatado)
-      .then((res) => {
-        clearInputFields();
-        modalServico.style.display = 'none';
-        myToast(res.msg, 'success');
-        refreshTableServices();
-      })
-      .catch((err) => {
-        modalServico.style.display = 'none';
-        myToast(err, 'error');
-        refreshTableServices();
-      });
-  }
-}
-
-// ####### editar servico
-async function updateService() {
-  if (inputNome.value !== '' && inputPreco.value !== '') {
-    const precoDesformatado = unmaskMoney(inputPreco.value);
-    const taxaDesformatado = unmaskPercent(inputTaxa.value);
-    await updateServico(inputID.value, inputNome.value, precoDesformatado, taxaDesformatado)
-      .then((res) => {
-        clearInputFields();
-        document.getElementById('modal-cria-servico').style.display = "none";
-        myToast(res.msg, 'success');
-        refreshTableServices();
-      })
-      .catch((err) => {
-        modalServico.style.display = 'none';
-        myToast('err', 'error');
-        refreshTableServices();
-      });
-  }
-}
-
-// ####### deleta serviço
-async function deletaServico(id) {
-  await deleteServico(id);
-  myToast('deletado com sucesso!', 'success');
-  refreshTableServices();
+  console.log(
+    {
+      data: inputData.value,
+      servicos: selectServicos.value,
+      cliente: selectClientes.value,
+      colaborador: selectColaboradores.value  
+    }
+  )
+  // if (inputNome.value !== '' && inputPreco.value !== '' && inputTaxa.value !== '') {
+  //   const precoDesformatado = unmaskMoney(inputPreco.value);
+  //   const taxaDesformatado = unmaskPercent(inputTaxa.value);
+  //   await createServico(inputNome.value, precoDesformatado, taxaDesformatado)
+  //     .then((res) => {
+  //       clearInputFields();
+  //       modalServico.style.display = 'none';
+  //       myToast(res.msg, 'success');
+  //       refreshTableServices();
+  //     })
+  //     .catch((err) => {
+  //       modalServico.style.display = 'none';
+  //       myToast(err, 'error');
+  //       refreshTableServices();
+  //     });
+  // }
 }
 
 let todosServicos = [];
+let todosColaboradores = [];
+let todosClientes = [];
+
+//  inicio teste
+function renderSelectOptions(selectElement, options) {
+  selectElement.innerHTML = ''; // Clear any existing options
+
+  options.forEach(option => {
+    const optionElement = document.createElement('option');
+    optionElement.value = option.id;
+    optionElement.textContent = option.name;
+    selectElement.appendChild(optionElement);
+  });
+}
+
+// fim teste
 
 const searchInput = document.getElementById('searchInput');
 const newServiceButton = document.getElementById("open-modal-cria-servico");
 const inputID = document.getElementById('id-servico');
-const inputNome = document.getElementById('nome-servico');
-const inputPreco = document.getElementById('preco');
-const inputTaxa = document.getElementById('taxa');
+const inputData = document.getElementById('data');
+// const inputTaxa = document.getElementById('taxa');
 const modalServico = document.getElementById('modal-cria-servico');
 const titleModal = document.getElementById('title-modal');
 const salvarServicos = document.getElementById('btn-salvar-servico');
 const contentDiv = document.getElementById('content');
 const table = document.createElement('table');
+
+// inputs
+const selectServicos = document.getElementById('select-servicos');
+const selectColaboradores = document.getElementById('select-colaboradores');
+const selectClientes = document.getElementById('select-clientes');
 
 let debounceTimeout;
 searchInput.addEventListener('input', function () {
@@ -84,20 +87,14 @@ function renderModal(servico = '') {
   const span = document.getElementsByClassName("close")[0];
   const { id, nome, preco, taxa } = servico;
 
-  if (id) {
-    titleModal.textContent = 'Editar Serviço';
-    inputID.value = id;
-    inputNome.value = nome;
-    inputPreco.value = preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });;
-    inputTaxa.value =`${(taxa * 100).toFixed(0)}%`;
-    salvarServicos.removeEventListener('click', createService);
-    salvarServicos.addEventListener('click', updateService);
-  } else {
-    salvarServicos.removeEventListener('click', updateService);
-    salvarServicos.addEventListener('click', createService);
-    titleModal.textContent = 'Criar Serviço';
-    clearInputFields();
-  }
+
+  renderSelectOptions(selectServicos, todosServicos.map((e) => ({ 'id': e.nome, 'name': e.nome })));
+  renderSelectOptions(selectColaboradores, todosColaboradores.map((e) => ({ 'id': e.nome, 'name': e.nome })));
+  renderSelectOptions(selectClientes, todosClientes.map((e) => ({ 'id': e.nome, 'name': e.nome })));
+
+  salvarServicos.addEventListener('click', createService);
+  titleModal.textContent = 'Criar Serviço';
+  clearInputFields();
 
 
   span.addEventListener('click', () => {
@@ -108,9 +105,8 @@ function renderModal(servico = '') {
 
 function clearInputFields() {
   inputID.value = '';
-  inputNome.value = '';
-  inputPreco.value = '';
-  inputTaxa.value = '';
+  // inputNome.value = '';
+  // inputTaxa.value = '';
 }
 
 async function criarListaDeServicos(servicos) {
@@ -190,6 +186,22 @@ function refreshTableServices() {
 };
 
 function initialize() {
+  getAllColaboradores()
+    .then(colaboradores => {
+      todosColaboradores = colaboradores
+    })
+    .catch(error => {
+      console.error('Erro ao carregar Colaboradores:', error);
+    });
+
+  getAllClientes()
+    .then(clientes => {
+      todosClientes = clientes
+    })
+    .catch(error => {
+      console.error('Erro ao carregar Clientes:', error);
+    });
+
   getAllServicos()
     .then(servicos => {
       todosServicos = servicos
@@ -207,15 +219,10 @@ function initialize() {
 function addEventListeners() {
   newServiceButton.addEventListener("click", renderModal);
   salvarServicos.addEventListener('click', createService);
-  inputPreco.addEventListener('input', async (e) => {
-    let precoFormatado = moneyMask(inputPreco.value);
-    inputPreco.value = precoFormatado;
-  });
-
-  inputTaxa.addEventListener('input', async (e) => {
-    let precoFormatado = percentMask(inputTaxa.value);
-    inputTaxa.value = precoFormatado;
-  });
+  // inputTaxa.addEventListener('input', async (e) => {
+  //   let precoFormatado = percentMask(inputTaxa.value);
+  //   inputTaxa.value = precoFormatado;
+  // });
 }
 
 window.addEventListener('DOMContentLoaded', initialize);
