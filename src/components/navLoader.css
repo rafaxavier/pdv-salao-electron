@@ -1,11 +1,11 @@
 /* Estilos específicos para o navLoader */
 /* Variáveis CSS para facilitar a manutenção */
 :root {
-  --bg-gradient-start: rgb(48, 27, 141);
-  --bg-gradient-middle: rgb(83, 13, 129);
-  --bg-gradient-end: rgba(61, 2, 42, 0.425);
+  --bg-gradient-start: rgb(26, 17, 65);
+  --bg-gradient-middle: rgb(55, 7, 87);
+  --bg-gradient-end: rgba(61, 2, 42, 0.952);
   --link-color: white;
-  --link-hover-bg: #487fd1b2;
+  --link-hover-bg: rgba(61, 2, 42, 0.527);
   --border-color: #ffffff;
   --transition-duration: 0.3s;
   --link-padding: 10px;

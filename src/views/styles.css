@@ -59,7 +59,7 @@ th {
   border: 1px solid #888;
   width: 300px;
   border-radius: 10px;
-  box-shadow: 8px 5px;
+  box-shadow: 8px 5px 20px;
 }
 
 .form-label {
