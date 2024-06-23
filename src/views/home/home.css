@@ -1,3 +1,81 @@
-#modal-cria-servico {
+#modal-cria-venda {
   display: none;
+}
+
+.select-input {
+  background-color: #cccccc4d;
+  border: 1px solid silver; 
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  width: 250px;  
+}
+
+.data-input {
+  background-color: #cccccc4d;
+  border: 1px solid silver; 
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  width: 240px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 320px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content input {
+  margin-right: 10px;
+}
+
+.dropdown-content label {
+  display: block;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  width: 323px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.select-services {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  width: 323px;
+  background-color: #cccccc4d;
+}
+.show-selected-services {
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  padding-left: 10px;
+  width: 322px;
+  background-color: rgba(238, 255, 1, 0.514);
+  border-left: #ffffff;
+  border-left-width: 12px;
+  border-left-style: dotted ;
+}
+.show-selected-services hr{
+  border-bottom: 1px solid red;
+}
+.show-selected-services p {
+  color: rgb(0, 0, 255);
+  font-style: italic;
+  font-weight: 500;
+  border-bottom: 1px solid rgb(177, 177, 177);
+  margin: 2px;
+  font-family: cursive;
 }

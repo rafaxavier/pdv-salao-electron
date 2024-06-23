@@ -55,9 +55,9 @@ th {
 .modal-content {
   background-color: #fefefe;
   margin: 15% auto;
-  padding: 40px;
+  padding: 10px 40px;
   border: 1px solid #888;
-  width: 300px;
+  width: 350px;
   border-radius: 10px;
   box-shadow: 8px 5px 20px;
 }
@@ -66,10 +66,6 @@ th {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.form-label input {
-  width: 200px;
 }
 
 .close {
@@ -86,11 +82,12 @@ th {
   cursor: pointer;
 }
 
-input {
+.input-style {
   border: 1px solid black;
   border-radius: 5px;
   margin: 5px;
   padding: 5px;
+  width: 240px;
 }
 
 button {
