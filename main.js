@@ -7,7 +7,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery');
 const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery');
 const { obterServicos, editarServico, criarServico, deletarServico } = require('./src/dbconfig/servicoQuery');
-const { criarVenda } = require('./src/dbconfig/lancamentoQuery');
+const { criarVenda, obterVendas } = require('./src/dbconfig/vendaQuery');
 
 const createWindow = () => {
   // Create the browser window.
@@ -152,13 +152,18 @@ ipcMain.on('editarServicos', async (event, { id, nome, preco, taxa }) => {
 });
 
 //  VENDAS
-ipcMain.on('criarVendas', async (event, { body}) => {
+ipcMain.on('criarVendas', async (event, { data, cliente, colaborador, servicosTratados}) => {
   try {
-    await criarVenda(body);
+    await criarVenda(data, cliente, colaborador, servicosTratados);
     event.reply('criarVendasResult', { success: true, msg: 'Venda salvo com sucesso' });
   } catch (error) {
     event.reply('criarVendasResult', { success: false, msg: 'Erro ao criar Venda: ' + error.message });
   }
+});
+
+ipcMain.on('obterVendas', async (event) => {
+  const vendas = await obterVendas();
+  event.reply('obterVendasResult', { success: true, vendas });
 });
 
 
