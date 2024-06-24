@@ -23,12 +23,12 @@ export function createVenda(data, cliente, colaborador, servicosTratados) {
   });
 };
 
-// export function deleteServico(id) {
-//   return new Promise((resolve, reject) => {
-//     window.electron.ipcRenderer.sendMessage('deletarServicos', { id });
-//     window.electron.ipcRenderer.once('deletarServicosResult', (resposta) => {
-//       console.log(resposta);
-//       resolve(resposta);
-//     });
-//   });
-// };
+export function deleteVenda(id) {
+  return new Promise((resolve, reject) => {
+    window.electron.ipcRenderer.sendMessage('deletarVendas', { id });
+    window.electron.ipcRenderer.once('deletarVendasResult', (resposta) => {
+      console.log(resposta);
+      resolve(resposta);
+    });
+  });
+};
