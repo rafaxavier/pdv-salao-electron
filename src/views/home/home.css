@@ -4,16 +4,16 @@
 
 .select-input {
   background-color: #cccccc4d;
-  border: 1px solid silver; 
+  border: 1px solid silver;
   border-radius: 5px;
   margin: 5px;
   padding: 5px;
-  width: 250px;  
+  width: 250px;
 }
 
 .data-input {
   background-color: #cccccc4d;
-  border: 1px solid silver; 
+  border: 1px solid silver;
   border-radius: 5px;
   margin: 5px;
   padding: 5px;
@@ -43,7 +43,7 @@
   display: block;
   padding: 10px;
   border-top: 1px solid #ccc;
-  width: 323px;
+  width: 340px;
 }
 
 .dropdown:hover .dropdown-content {
@@ -55,22 +55,25 @@
   padding: 10px;
   border: 1px solid #ccc;
   cursor: pointer;
-  width: 323px;
+  width: 340px;
   background-color: #cccccc4d;
 }
+
 .show-selected-services {
   border: 1px solid #ccc;
   margin-top: 5px;
   padding-left: 10px;
-  width: 322px;
+  width: 340px;
   background-color: rgba(238, 255, 1, 0.514);
   border-left: #ffffff;
   border-left-width: 12px;
-  border-left-style: dotted ;
+  border-left-style: dotted;
 }
-.show-selected-services hr{
+
+.show-selected-services hr {
   border-bottom: 1px solid red;
 }
+
 .show-selected-services p {
   color: rgb(0, 0, 255);
   font-style: italic;
@@ -78,4 +81,18 @@
   border-bottom: 1px solid rgb(177, 177, 177);
   margin: 2px;
   font-family: cursive;
+}
+
+.card-container {
+  width: 98%;
+  background: #fff;
+  margin-bottom: 20px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
 }
