@@ -23,7 +23,7 @@ function createDatabaseStructure() {
             taxa REAL,
             desconto REAL,
             repasse REAL,
-            FOREIGN KEY(venda_id) REFERENCES vendas(id)
+            FOREIGN KEY(venda_id) REFERENCES vendas(id) ON DELETE CASCADE
           )
         `);
   });
@@ -45,7 +45,7 @@ const criarVenda = async (data, cliente, colaborador, servicosTratados) => {
         // Inserir serviços relacionados à venda
         const inserirServicos = servicosTratados.map(servico => {
           return new Promise((resolve, reject) => {
-            const [preco, nome ,taxa, desconto, repasse] = servico;
+            const [nome, preco, taxa, desconto, repasse] = servico;
             db.run('INSERT INTO venda_servicos (venda_id, nome, preco, taxa, desconto, repasse) VALUES (?, ?, ?, ?, ?, ?)', 
               [vendaId, nome ,preco, taxa, desconto, repasse], 
               function (err) {
@@ -94,7 +94,7 @@ const obterVendas = () => {
       ON 
         v.id = vs.venda_id
       ORDER BY 
-        v.cliente ASC
+        v.data ASC
     `, (err, rows) => {
       if (err) {
         reject(err);
@@ -132,22 +132,22 @@ const obterVendas = () => {
 };
 
 
-// const deletarVenda = async (id) => {
-//   return new Promise((resolve, reject) => {
-//     db.run('DELETE FROM colaboradores WHERE id = ?', [id], function (err) {
-//       if (err) {
-//         console.log(err)
-//         reject(err);
-//       } else {
-//         resolve(this.changes);
-//       }
-//     });
-//   });
-// };
+const deletarVenda = async (id) => {
+  return new Promise((resolve, reject) => {
+    db.run('DELETE FROM vendas WHERE id = ?', [id], function (err) {
+      if (err) {
+        console.log(err)
+        reject(err);
+      } else {
+        resolve(this.changes);
+      }
+    });
+  });
+};
 
 
 module.exports = {
   obterVendas,
   criarVenda,
-  // deletarVenda,
+  deletarVenda,
 };
