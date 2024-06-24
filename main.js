@@ -19,6 +19,8 @@ const createWindow = () => {
     }
   })
 
+  // mainWindow.setMenu(null);
+
   // and load the index.html of the app.
   mainWindow.loadFile('./src/views/home/index.html')
 

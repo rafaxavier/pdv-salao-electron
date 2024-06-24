@@ -21,6 +21,10 @@
   display: flex;
 }
 
+.header nav {
+  padding: 30px 10px;
+}
+
 .header nav ul,
 .header nav div {
   width: 220px;
