@@ -7,7 +7,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery');
 const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery');
 const { obterServicos, editarServico, criarServico, deletarServico } = require('./src/dbconfig/servicoQuery');
-const { criarVenda, obterVendas } = require('./src/dbconfig/vendaQuery');
+const { criarVenda, obterVendas, deletarVenda } = require('./src/dbconfig/vendaQuery');
 
 const createWindow = () => {
   // Create the browser window.
@@ -166,6 +166,18 @@ ipcMain.on('obterVendas', async (event) => {
   event.reply('obterVendasResult', { success: true, vendas });
 });
 
+ipcMain.on('deletarVendas', async (event, { id }) => {
+  const del = await deletarVenda(id);
+  let feedBack = {};
+
+  if (del === 1) {
+    feedBack = { success: true, msg: 'Serviço deletado com sucesso' }
+  } else {
+    feedBack = { success: false, msg: 'Serviço não deletado!' }
+  }
+
+  event.reply('deletarVendasResult', feedBack);
+});
 
 // Algumas APIs podem ser usadas somente depois que este evento ocorre.
 app.whenReady().then(() => {
