@@ -19,7 +19,7 @@ function createDatabaseStructure() {
         console.error('Erro ao verificar a tabela de colaboradores:', err);
       } else {
         if (row.count === 0) {
-          db.run('INSERT INTO colaboradores (nome, profissao, cpf) VALUES (?, ?, ?)', ['Fulana dos Santos', '(21)97322-1111', '111.222.333-66']);
+          db.run('INSERT INTO colaboradores (nome, profissao, cpf) VALUES (?, ?, ?)', ['Fulana dos Santos', 'Manicure', '111.222.333-66']);
         }
       }
     });
