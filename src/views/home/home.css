@@ -83,16 +83,26 @@
   font-family: cursive;
 }
 
+.header-top {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content:space-between;
+  /* border: 1px solid red; */
+}
+
 .card-container {
   min-width: 600px;
-  background: #fff;
-  margin-bottom: 20px;
-  padding: 5px;
-  border-radius: 5px;
+  background-color: #0f015f80;
+  padding:0 5px;
+  margin: 10px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom: 2px solid black;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  font-weight: bold;
+  color: #ffffff;
 }
