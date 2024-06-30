@@ -27,8 +27,10 @@ const table = document.createElement('table');
 const selectColaboradores = document.getElementById('select-colaboradores');
 const selectClientes = document.getElementById('select-clientes');
 const checkBoxContainer = document.getElementById('checkbox-container');
+const showTotal = document.getElementById('total');
 const showSelectedServices = document.querySelector('.show-selected-services');
-
+let strTotal1 = document.createElement('h3');
+let strTotal2 = document.createElement('h3');
 
 // ####### cria venda
 async function criarVenda() {
@@ -146,6 +148,7 @@ searchInput.addEventListener('input', function () {
     const arr = todasVendas.filter(e => e.cliente.toLowerCase().includes(searchText));
     table.innerHTML = '';
     contentDiv.innerHTML = '';
+    strTotal1.innerHTML = '';
     criarListaDeVendas(arr);
   }, 300);
 });
@@ -204,10 +207,27 @@ function renderCheckboxes(e, options) {
   });
 }
 
+function getTimeNow() {
+  let now = new Date();
+  let year = now.getFullYear();
+  let month = now.getMonth() + 1;
+  let day = now.getDate();
+  let hour = now.getHours();
+  let minute = now.getMinutes();
+  let localDatetime = year + "-" +
+    (month < 10 ? "0" + month.toString() : month) + "-" +
+    (day < 10 ? "0" + day.toString() : day) + "T" +
+    (hour < 10 ? "0" + hour.toString() : hour) + ":" +
+    (minute < 10 ? "0" + minute.toString() : minute);
+  inputData.value = localDatetime;
+}
+
 // modal de lancamento de venda
 function renderModalNovaVenda() {
   modalVenda.style.display = "block";
   const span = document.getElementsByClassName("close")[0];
+
+  modalVenda.addEventListener('animationstart', getTimeNow)
 
   renderCheckboxes(checkBoxContainer, todosServicos);
   renderSelectOptions(selectColaboradores, todosColaboradores.map((e) => ({ 'id': e.nome, 'name': e.nome })));
@@ -218,6 +238,7 @@ function renderModalNovaVenda() {
   clearInputFields();
 
   span.addEventListener('click', () => {
+    modalVenda.removeEventListener('animationstart', getTimeNow)
     clearInputFields();
     modalVenda.style.display = "none";
   });
@@ -241,6 +262,8 @@ function clearInputFields() {
 
 async function criarListaDeVendas(vendas) {
   table.innerHTML = '';
+  let desconto = 0;
+  let repasse = 0;
   vendas.forEach(e => {
     const cardContainer = document.createElement('div');
     cardContainer.classList.add('card-container');
@@ -260,8 +283,8 @@ async function criarListaDeVendas(vendas) {
     p5.textContent = 'Ação';
 
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Deletar';
-    deleteButton.classList.add('btn-danger', 'btn-sm')
+    deleteButton.textContent = 'X';
+    deleteButton.classList.add('btn-danger', 'btn-xsm')
     deleteButton.addEventListener('click', () => deletaVenda(e.id));
 
     header.appendChild(p1);
@@ -316,10 +339,20 @@ async function criarListaDeVendas(vendas) {
       row.appendChild(column3);
       row.appendChild(column4);
       tabela.appendChild(row);
+
+      desconto = desconto + a.desconto
+      repasse = repasse + a.repasse
+
     })
 
     contentDiv.appendChild(cardContainer);
   });
+
+  strTotal1.innerText = 'Total Desconto: ' + desconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  strTotal2.innerText = 'Total Repasse: ' + repasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  showTotal.appendChild(strTotal1);
+  showTotal.appendChild(strTotal2);
 };
 
 function refreshListaVendas() {
