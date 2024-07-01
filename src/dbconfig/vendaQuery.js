@@ -1,7 +1,6 @@
 const db = require('./sqliteService');
 
 function createDatabaseStructure() {
-  console.log("Banco criadooooo")
   db.serialize(() => {
     // Criar tabela de vendas
     db.run(`
@@ -32,8 +31,6 @@ function createDatabaseStructure() {
 createDatabaseStructure();
 
 const criarVenda = async (data, cliente, colaborador, servicosTratados) => {
-  console.log(data, cliente, colaborador, servicosTratados);
-  
   return new Promise((resolve, reject) => {
     db.run('INSERT INTO vendas (data, cliente, colaborador) VALUES (?, ?, ?)', [data, cliente, colaborador], function (err) {
       if (err) {
