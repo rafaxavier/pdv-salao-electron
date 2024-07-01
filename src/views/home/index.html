@@ -27,7 +27,7 @@
     <div id="modal-cria-venda" class="modal">
         <div class="modal-content">
             <span id="close-modal-cria-venda" class="close">&times;</span>
-            <h2 id="title-modal">Criar Servico</h2>
+            <h2 id="title-modal">Lançar Servico</h2>
             <input type="text" id="id-servico" hidden>
             <div class="form-label">
                 <label for="data">Data/Hora:</label>
@@ -60,18 +60,30 @@
 
     <div class="header"></div>
     <div class="conteiner-content">
-        <h2>Lançamentos</h2>
+        <h2>Lançamentos
+            <button class="btn-success btn-md" style="max-width: 150px;" id="open-modal-cria-venda">
+                Adicionar
+            </button>
+        </h2>
 
         <!-- ### Add Serviço ### -->
         <div class="header-top">
-            <div style=" min-width: 200px; max-width: 500px;">
-                <button class="btn-success btn-md" style="max-width: 150px;"  id="open-modal-cria-venda">Criar novo Serviço</button>
-                <input class="input-style" type="text" style="max-width: 150px;"  id="searchInput" placeholder="Pesquisar Cliente...">
+            <div style="border: 1px solid blue; max-width: 500px; background-color: rgb(240, 248, 255) ; padding:0 15px;">
+                <div>
+                    <label for="">Filtrar por:</label><br>
+                    <input class="input-style" type="search" style="max-width: 150px;" id="searchInput"
+                        placeholder="Cliente ...">
+                    <input type="week" id="input-week">
+
+                    <select style="max-width: 150px;" id="select-filtro-colaborador">
+                        <!-- Options will be dynamically inserted here -->
+                    </select>
+                </div>
             </div>
-            <div style="border: 1px solid blue; max-width: 500px; background-color: aliceblue ; padding:0 15px;" id="total"></div>
+            <div style="border: 1px solid blue; max-width: 500px; background-color: aliceblue ; padding:0 15px;"
+                id="total"></div>
         </div>
         <hr>
-
         <div id="content">
             <!-- Os Serviços serão adicionados aqui dinamicamente -->
         </div>

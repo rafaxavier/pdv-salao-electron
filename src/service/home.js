@@ -3,7 +3,7 @@ import { getAllServicos } from '../requests/servicos-ipc.js';
 import { getAllColaboradores } from '../requests/colaboradores-ipc.js';
 import { getAllClientes } from '../requests/clientes-ipc.js';
 import { createVenda, getAllVendas, deleteVenda } from '../requests/vendas-ipc.js';
-import { formatDateTime, unmaskMoney, unmaskPercent } from '../utils/masks.js';
+import { convertWeekToDatetimeLocal, formatDateTime, unmaskMoney, unmaskPercent } from '../utils/masks.js';
 
 let todosServicos = [];
 let todosColaboradores = [];
@@ -31,6 +31,8 @@ const showTotal = document.getElementById('total');
 const showSelectedServices = document.querySelector('.show-selected-services');
 let strTotal1 = document.createElement('h3');
 let strTotal2 = document.createElement('h3');
+const inputSemana = document.getElementById('input-week');
+const selectFiltroColaboradores = document.getElementById('select-filtro-colaborador');
 
 // ####### cria venda
 async function criarVenda() {
@@ -152,6 +154,42 @@ searchInput.addEventListener('input', function () {
     criarListaDeVendas(arr);
   }, 300);
 });
+
+// select de pesquisa por colaborador
+selectFiltroColaboradores.addEventListener('input', function () {
+  const searchText = this.value !== "Colaborador" ? this.value.toLowerCase() : '';
+  const arr = todasVendas.filter(e => e.colaborador.toLowerCase().includes(searchText));
+  table.innerHTML = '';
+  contentDiv.innerHTML = '';
+  strTotal1.innerHTML = '';
+  criarListaDeVendas(arr);
+})
+
+// pesquisa por semana
+inputSemana.addEventListener('input', function () {
+  if (inputSemana.value !== '') {
+    let week = convertWeekToDatetimeLocal(inputSemana.value);
+    const startDate = new Date(week.start);
+    const endDate = new Date(week.end);
+    endDate.setHours(23, 59, 59, 999);
+
+    const arr = todasVendas.filter(e => {
+      const vendaDate = new Date(e.data);
+      return vendaDate >= startDate && vendaDate <= endDate;
+    });
+
+    table.innerHTML = '';
+    contentDiv.innerHTML = '';
+    strTotal1.innerHTML = '';
+    criarListaDeVendas(arr);
+  } else {
+    table.innerHTML = '';
+    contentDiv.innerHTML = '';
+    strTotal1.innerHTML = '';
+    refreshListaVendas();
+  }
+})
+
 
 // exibe os servicos na medida que sao selecionados
 function updateSelectedServices() {
@@ -384,7 +422,17 @@ function initialize() {
 
   getAllColaboradores()
     .then(colaboradores => {
-      todosColaboradores = colaboradores
+      todosColaboradores = colaboradores;
+      let valueDefault = {
+        "id": 0,
+        "nome": "Colaborador ...",
+        "profissao": "",
+        "cpf": ""
+      }
+
+      let arrAux = JSON.parse(JSON.stringify(todosColaboradores));;
+      arrAux.unshift(valueDefault)
+      renderSelectOptions(selectFiltroColaboradores, arrAux.map((e) => ({ 'id': e.nome, 'name': e.nome })));
     })
     .catch(error => {
       console.error('Erro ao carregar Colaboradores:', error);
