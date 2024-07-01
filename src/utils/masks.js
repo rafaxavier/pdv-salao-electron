@@ -63,3 +63,24 @@ export function formatDateTime(dateTimeString) {
 
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
+
+// '2024-W26' => {"start": "2024-06-24T00:00","end": "2024-06-30T00:00"}
+export function convertWeekToDatetimeLocal(weekString) {
+  const [year, week] = weekString.split('-W');
+  const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
+  const daysOffset = (firstDayOfYear.getUTCDay() <= 4 ? firstDayOfYear.getUTCDay() : firstDayOfYear.getUTCDay() + 7) - 1;
+  const startDate = new Date(firstDayOfYear.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000 - daysOffset * 24 * 60 * 60 * 1000);
+  const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+  const formatDateTimeLocal = (date) => {
+    const yearStr = date.getUTCFullYear();
+    const monthStr = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const dayStr = String(date.getUTCDate()).padStart(2, '0');
+    return `${yearStr}-${monthStr}-${dayStr}T00:00`;
+  };
+
+  return {
+    start: formatDateTimeLocal(startDate),
+    end: formatDateTimeLocal(endDate)
+  };
+}
