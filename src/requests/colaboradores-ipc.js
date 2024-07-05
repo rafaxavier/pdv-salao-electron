@@ -42,3 +42,13 @@ export function updateColaborador(id, nome, profissao, cpf) {
     });
   });
 };
+
+export function getOneColaboradorByName(nome) {
+  return new Promise((resolve, reject) => {
+    window.electron.ipcRenderer.sendMessage('getOneByName', { nome });
+    window.electron.ipcRenderer.once('getOneByNameResult', (resposta) => {
+      console.log(resposta);
+      resolve(resposta);
+    });
+  });
+};
