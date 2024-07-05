@@ -5,7 +5,7 @@ const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron');
 
 const { obterClientes, criarCliente, deletarCliente, editarCliente } = require('./src/dbconfig/clienteQuery');
-const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador } = require('./src/dbconfig/colaboradorQuery');
+const { obterColaboradores, criarColaborador, deletarColaborador, editarColaborador, obterColaboradorPorNome } = require('./src/dbconfig/colaboradorQuery');
 const { obterServicos, editarServico, criarServico, deletarServico } = require('./src/dbconfig/servicoQuery');
 const { criarVenda, obterVendas, deletarVenda } = require('./src/dbconfig/vendaQuery');
 
@@ -110,6 +110,11 @@ ipcMain.on('editarColaboradores', async (event, { id, nome, profissao, cpf }) =>
   }
 
   event.reply('editarColaboradoresResult', feedBack);
+});
+
+ipcMain.on('getOneByName', async (event, { nome }) => {
+  const colaborador = await obterColaboradorPorNome(nome);
+  event.reply('getOneByNameResult', { success: true, colaborador });
 });
 
 // SERVICOS
