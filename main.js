@@ -114,7 +114,8 @@ ipcMain.on('editarColaboradores', async (event, { id, nome, profissao, cpf }) =>
 
 ipcMain.on('getOneByName', async (event, { nome }) => {
   const colaborador = await obterColaboradorPorNome(nome);
-  event.reply('getOneByNameResult', { success: true, colaborador });
+  const res = colaborador[0];
+  event.reply('getOneByNameResult', { success: true, res });
 });
 
 // SERVICOS
