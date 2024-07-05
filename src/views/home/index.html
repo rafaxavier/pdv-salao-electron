@@ -64,23 +64,27 @@
             <button class="btn-success btn-md" style="max-width: 150px;" id="open-modal-cria-venda">
                 Adicionar
             </button>
+            <button style="max-width: 140px;" hidden id="btn-gerar-pdf">Gerar PDF</button>
         </h2>
 
         <!-- ### Add Serviço ### -->
         <div class="header-top">
-            <div style="border: 1px solid blue; max-width: 500px; background-color: rgb(240, 248, 255) ; padding:0 15px;">
-                <div>
+            <div style="padding:5px;">
+                <div style="display: inline-block; flex-wrap:wrap; ">
                     <label for="">Filtrar por:</label><br>
-                    <input class="input-style" type="search" style="max-width: 150px;" id="searchInput"
+                    <input class="input-style" type="search" style="max-width: 135px" id="filtro-cliente" name="cliente"
                         placeholder="Cliente ...">
-                    <input type="week" id="input-week">
-
-                    <select style="max-width: 150px;" id="select-filtro-colaborador">
+                    <input class="input-style" style="max-width: 140px;" type="week" id="filtro-semana" name="semana">
+                    <input class="input-style" style="max-width: 155px;" type="month" id="filtro-mes" name="mes">
+                    <select class="input-style" style="max-width: 135px; background-color: #fff; border-color: black;"
+                        id="filtro-colaborador" name="colaborador">
                         <!-- Options will be dynamically inserted here -->
                     </select>
+                    <button style="max-width: 152px;" class="btn-md btn-warning" id="btn-filtrar">Filtrar</button>
+                    <button style="max-width: 165px;" class="btn-md btn-danger" id="btn-limpar-filtro">Limpar</button>
                 </div>
             </div>
-            <div style="border: 1px solid blue; max-width: 500px; background-color: aliceblue ; padding:0 15px;"
+            <div style="max-width: 500px; background-color: aliceblue ; padding:0px 15px; display: flex; flex-direction: column;"
                 id="total"></div>
         </div>
         <hr>
@@ -92,6 +96,7 @@
     <script src="../../components/navLoader.js"></script>
     <script src="../../../renderer.js"></script>
     <script type="module" src="../../service/home.js"></script>
+    <script src="https://unpkg.com/jspdf-invoice-template@1.4.3/dist/index.js"></script>
 </body>
 
 </html>
