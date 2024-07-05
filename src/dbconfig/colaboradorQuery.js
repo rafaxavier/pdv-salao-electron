@@ -1,7 +1,7 @@
 const db = require('./sqliteService');
 
 function createDatabaseStructure() {
-  
+
   db.serialize(() => {
     db.run(`
       CREATE TABLE IF NOT EXISTS colaboradores (
@@ -83,9 +83,22 @@ const editarColaborador = async (id, nome, profissao, cpf) => {
   });
 };
 
+const obterColaboradorPorNome = async (nome) => {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM colaboradores WHERE nome = ?', [nome], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+};
+
 module.exports = {
   obterColaboradores,
   criarColaborador,
   deletarColaborador,
-  editarColaborador
+  editarColaborador,
+  obterColaboradorPorNome
 };
