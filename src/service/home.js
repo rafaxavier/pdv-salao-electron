@@ -3,7 +3,7 @@ import { getAllServicos } from '../requests/servicos-ipc.js';
 import { getAllColaboradores } from '../requests/colaboradores-ipc.js';
 import { getAllClientes } from '../requests/clientes-ipc.js';
 import { createVenda, getAllVendas, deleteVenda } from '../requests/vendas-ipc.js';
-import { convertWeekToDatetimeLocal, formatDateTime, unmaskMoney, unmaskPercent } from '../utils/masks.js';
+import { convertMonthToDatetimeLocal, convertWeekToDatetimeLocal, formatDateTime, generatePDF, unmaskMoney, unmaskPercent } from '../utils/masks.js';
 
 let todosServicos = [];
 let todosColaboradores = [];
@@ -13,9 +13,8 @@ let itensSelecionados = [];
 let objServicosSelecionados = [];
 let allCheckboxes = [];
 let servicosTratados = [];
-let debounceTimeout;
+let arr = [];
 
-const searchInput = document.getElementById('searchInput');
 const newServiceButton = document.getElementById("open-modal-cria-venda");
 const inputID = document.getElementById('id-servico');
 const inputData = document.getElementById('data');
@@ -29,10 +28,16 @@ const selectClientes = document.getElementById('select-clientes');
 const checkBoxContainer = document.getElementById('checkbox-container');
 const showTotal = document.getElementById('total');
 const showSelectedServices = document.querySelector('.show-selected-services');
-let strTotal1 = document.createElement('h3');
-let strTotal2 = document.createElement('h3');
-const inputSemana = document.getElementById('input-week');
-const selectFiltroColaboradores = document.getElementById('select-filtro-colaborador');
+const strTotalDesconto = document.createElement('h3');
+const strTotalRepasse = document.createElement('h3');
+const filtroColaborador = document.getElementById('filtro-colaborador');
+const filtroCliente = document.getElementById('filtro-cliente');
+const filtroSemana = document.getElementById('filtro-semana');
+const filtroMes = document.getElementById('filtro-mes');
+const btnFiltrar = document.getElementById('btn-filtrar');
+const btnLimparFiltro = document.getElementById('btn-limpar-filtro');
+const btnGerarPdf = document.getElementById('btn-gerar-pdf');
+const quebra = document.createElement('br');
 
 // ####### cria venda
 async function criarVenda() {
@@ -142,54 +147,72 @@ function renderSelectOptions(selectElement, options) {
   });
 }
 
-// caixa de pesquisa por cliente
-searchInput.addEventListener('input', function () {
-  clearTimeout(debounceTimeout);
-  debounceTimeout = setTimeout(() => {
-    const searchText = this.value.toLowerCase();
-    const arr = todasVendas.filter(e => e.cliente.toLowerCase().includes(searchText));
-    table.innerHTML = '';
-    contentDiv.innerHTML = '';
-    strTotal1.innerHTML = '';
-    criarListaDeVendas(arr);
-  }, 300);
-});
+function handlerLimparFiltro() {
+  refreshListaVendas();
+  btnLimparFiltro.removeEventListener('click', handlerLimparFiltro)
+}
 
-// select de pesquisa por colaborador
-selectFiltroColaboradores.addEventListener('input', function () {
-  const searchText = this.value !== "Colaborador" ? this.value.toLowerCase() : '';
-  const arr = todasVendas.filter(e => e.colaborador.toLowerCase().includes(searchText));
-  table.innerHTML = '';
-  contentDiv.innerHTML = '';
-  strTotal1.innerHTML = '';
-  criarListaDeVendas(arr);
-})
+btnFiltrar.addEventListener('click', async () => {
+  let { name: clienteName, value: clienteValue } = filtroCliente;
+  let { name: colaboradorName, value: colaboradorValue } = filtroColaborador;
+  let { name: semanaName, value: semanaValue } = filtroSemana;
+  let { name: mesName, value: mesValue } = filtroMes;
+  let startDate = '';
+  let endDate = '';
 
-// pesquisa por semana
-inputSemana.addEventListener('input', function () {
-  if (inputSemana.value !== '') {
-    let week = convertWeekToDatetimeLocal(inputSemana.value);
-    const startDate = new Date(week.start);
-    const endDate = new Date(week.end);
-    endDate.setHours(23, 59, 59, 999);
+  btnGerarPdf.setAttribute('hidden', '');
+  btnGerarPdf.removeEventListener('click', generatePDF);
+  btnLimparFiltro.removeEventListener('click', handlerLimparFiltro);
 
-    const arr = todasVendas.filter(e => {
+  arr = todasVendas;
+
+  if (semanaValue !== '') {
+    filtroMes.value = '';
+    mesValue = '';
+    const week = convertWeekToDatetimeLocal(filtroSemana.value);
+    startDate = new Date(week.start);
+    endDate = new Date(week.end);
+
+    arr = arr.filter(e => {
       const vendaDate = new Date(e.data);
       return vendaDate >= startDate && vendaDate <= endDate;
     });
-
-    table.innerHTML = '';
-    contentDiv.innerHTML = '';
-    strTotal1.innerHTML = '';
-    criarListaDeVendas(arr);
-  } else {
-    table.innerHTML = '';
-    contentDiv.innerHTML = '';
-    strTotal1.innerHTML = '';
-    refreshListaVendas();
   }
-})
 
+  if (mesValue !== '') {
+    filtroSemana.value = '';
+    semanaValue = '';
+    const mes = convertMonthToDatetimeLocal(filtroMes.value);
+    startDate = new Date(mes.start);
+    endDate = new Date(mes.end);
+
+    arr = arr.filter(e => {
+      const vendaDate = new Date(e.data);
+      return vendaDate >= startDate && vendaDate <= endDate;
+    });
+  }
+
+  if (clienteValue !== '') {
+    arr = arr.filter(e => e.cliente.toLowerCase().includes(clienteValue));
+  }
+
+  if (colaboradorValue !== 'Colaborador') {
+    if (semanaValue !== '' || mesValue !== '') {
+      let periodo = `Período: ${formatDateTime(startDate)} á ${formatDateTime(endDate)}`;
+
+      btnGerarPdf.removeAttribute('hidden');
+      btnGerarPdf.addEventListener('click', () => generatePDF(arr, periodo));
+    }
+
+    arr = arr.filter(e => e.colaborador.includes(colaboradorValue));
+  }
+
+  table.innerHTML = '';
+  contentDiv.innerHTML = '';
+  criarListaDeVendas(arr);
+
+  btnLimparFiltro.addEventListener('click', handlerLimparFiltro);
+});
 
 // exibe os servicos na medida que sao selecionados
 function updateSelectedServices() {
@@ -296,6 +319,18 @@ function clearInputFields() {
   allCheckboxes.forEach((checkbox) => {
     checkbox.checked = false;
   });
+
+  filtroCliente.value = '';
+  filtroColaborador.value = 'Colaborador';
+  filtroSemana.value = '';
+  filtroMes.value = '';
+  arr = [];
+
+  filtroCliente.value = '';
+  table.innerHTML = '';
+  table.textContent = '';
+  contentDiv.innerHTML = '';
+  btnGerarPdf.setAttribute('hidden', '');
 }
 
 async function criarListaDeVendas(vendas) {
@@ -386,18 +421,19 @@ async function criarListaDeVendas(vendas) {
     contentDiv.appendChild(cardContainer);
   });
 
-  strTotal1.innerText = 'Total Desconto: ' + desconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  strTotalDesconto.innerText = ' Total Desconto: ' + desconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  strTotalDesconto.style = 'padding:0px; margin:0px'
 
-  strTotal2.innerText = 'Total Repasse: ' + repasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-  showTotal.appendChild(strTotal1);
-  showTotal.appendChild(strTotal2);
+  strTotalRepasse.innerText = ' Total Repasse: ' + repasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  strTotalRepasse.style = 'padding:0px; margin:0px'
+
+  showTotal.appendChild(strTotalDesconto);
+  showTotal.appendChild(quebra);
+  showTotal.appendChild(strTotalRepasse);
 };
 
 function refreshListaVendas() {
-  searchInput.value = '';
-  table.innerHTML = '';
-  table.textContent = '';
-  contentDiv.innerHTML = '';
+  clearInputFields();
 
   getAllVendas()
     .then(vendas => {
@@ -425,14 +461,14 @@ function initialize() {
       todosColaboradores = colaboradores;
       let valueDefault = {
         "id": 0,
-        "nome": "Colaborador ...",
+        "nome": "Colaborador",
         "profissao": "",
         "cpf": ""
       }
 
       let arrAux = JSON.parse(JSON.stringify(todosColaboradores));;
       arrAux.unshift(valueDefault)
-      renderSelectOptions(selectFiltroColaboradores, arrAux.map((e) => ({ 'id': e.nome, 'name': e.nome })));
+      renderSelectOptions(filtroColaborador, arrAux.map((e) => ({ 'id': e.nome, 'name': e.nome })));
     })
     .catch(error => {
       console.error('Erro ao carregar Colaboradores:', error);
