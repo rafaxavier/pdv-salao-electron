@@ -20,6 +20,15 @@
   width: 240px;
 }
 
+.filter-input {
+  background-color: #ffffff;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  width: 160px;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -87,14 +96,25 @@
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
+  align-items: center;
   /* border: 1px solid red; */
+}
+
+.box-total-preview {
+  min-width: 250px;
+  max-width: 500px;
+  background-color: aliceblue;
+  margin-top:10px;
+  padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-container {
   min-width: 600px;
   background-color: #0f015f80;
-  padding:0 5px;
+  padding: 0 5px;
   margin: 10px;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;

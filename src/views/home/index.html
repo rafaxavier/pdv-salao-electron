@@ -72,20 +72,18 @@
             <div style="padding:5px;">
                 <div style="display: inline-block; flex-wrap:wrap; ">
                     <label for="">Filtrar por:</label><br>
-                    <input class="input-style" type="search" style="max-width: 135px" id="filtro-cliente" name="cliente"
+                    <input class="filter-input" type="search" id="filtro-cliente" name="cliente"
                         placeholder="Cliente ...">
-                    <input class="input-style" style="max-width: 140px;" type="week" id="filtro-semana" name="semana">
-                    <input class="input-style" style="max-width: 155px;" type="month" id="filtro-mes" name="mes">
-                    <select class="input-style" style="max-width: 135px; background-color: #fff; border-color: black;"
-                        id="filtro-colaborador" name="colaborador">
+                    <input class="filter-input" type="week" id="filtro-semana" name="semana">
+                    <input class="filter-input" type="month" id="filtro-mes" name="mes">
+                    <select class="filter-input" id="filtro-colaborador" name="colaborador">
                         <!-- Options will be dynamically inserted here -->
                     </select>
-                    <button style="max-width: 152px;" class="btn-md btn-warning" id="btn-filtrar">Filtrar</button>
-                    <button style="max-width: 165px;" class="btn-md btn-danger" id="btn-limpar-filtro">Limpar</button>
+                    <button style="width: 172px;" class="btn-md btn-warning" id="btn-filtrar">Filtrar</button>
+                    <button style="width: 172px;" class="btn-md btn-danger" id="btn-limpar-filtro">Limpar</button>
                 </div>
             </div>
-            <div style="max-width: 500px; background-color: aliceblue ; padding:0px 15px; display: flex; flex-direction: column;"
-                id="total"></div>
+            <div class="box-total-preview" id="total"></div>
         </div>
         <hr>
         <div id="content">
