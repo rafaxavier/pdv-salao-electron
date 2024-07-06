@@ -3,7 +3,7 @@ import { getAllServicos } from '../requests/servicos-ipc.js';
 import { getAllColaboradores } from '../requests/colaboradores-ipc.js';
 import { getAllClientes } from '../requests/clientes-ipc.js';
 import { createVenda, getAllVendas, deleteVenda } from '../requests/vendas-ipc.js';
-import { convertMonthToDatetimeLocal, convertWeekToDatetimeLocal, formatDateTime, generatePDF, unmaskMoney, unmaskPercent } from '../utils/masks.js';
+import { convertMonthToDatetimeLocal, convertWeekToDatetimeLocal, formatDateTime, generatePDF, getTimeNow, unmaskMoney, unmaskPercent } from '../utils/masks.js';
 
 let todosServicos = [];
 let todosColaboradores = [];
@@ -14,6 +14,7 @@ let objServicosSelecionados = [];
 let allCheckboxes = [];
 let servicosTratados = [];
 let arr = [];
+let periodo = '';
 
 const newServiceButton = document.getElementById("open-modal-cria-venda");
 const inputID = document.getElementById('id-servico');
@@ -37,7 +38,6 @@ const filtroMes = document.getElementById('filtro-mes');
 const btnFiltrar = document.getElementById('btn-filtrar');
 const btnLimparFiltro = document.getElementById('btn-limpar-filtro');
 const btnGerarPdf = document.getElementById('btn-gerar-pdf');
-const quebra = document.createElement('br');
 
 // ####### cria venda
 async function criarVenda() {
@@ -152,6 +152,12 @@ function handlerLimparFiltro() {
   btnLimparFiltro.removeEventListener('click', handlerLimparFiltro)
 }
 
+function handlerGerarPDF() {
+  generatePDF(arr, periodo);
+}
+
+btnGerarPdf.addEventListener('click', handlerGerarPDF);
+
 btnFiltrar.addEventListener('click', async () => {
   let { name: clienteName, value: clienteValue } = filtroCliente;
   let { name: colaboradorName, value: colaboradorValue } = filtroColaborador;
@@ -161,7 +167,6 @@ btnFiltrar.addEventListener('click', async () => {
   let endDate = '';
 
   btnGerarPdf.setAttribute('hidden', '');
-  btnGerarPdf.removeEventListener('click', generatePDF);
   btnLimparFiltro.removeEventListener('click', handlerLimparFiltro);
 
   arr = todasVendas;
@@ -198,10 +203,8 @@ btnFiltrar.addEventListener('click', async () => {
 
   if (colaboradorValue !== 'Colaborador') {
     if (semanaValue !== '' || mesValue !== '') {
-      let periodo = `Período: ${formatDateTime(startDate)} á ${formatDateTime(endDate)}`;
-
+      periodo = `Período: ${formatDateTime(startDate)} á ${formatDateTime(endDate)}`;
       btnGerarPdf.removeAttribute('hidden');
-      btnGerarPdf.addEventListener('click', () => generatePDF(arr, periodo));
     }
 
     arr = arr.filter(e => e.colaborador.includes(colaboradorValue));
@@ -268,19 +271,8 @@ function renderCheckboxes(e, options) {
   });
 }
 
-function getTimeNow() {
-  let now = new Date();
-  let year = now.getFullYear();
-  let month = now.getMonth() + 1;
-  let day = now.getDate();
-  let hour = now.getHours();
-  let minute = now.getMinutes();
-  let localDatetime = year + "-" +
-    (month < 10 ? "0" + month.toString() : month) + "-" +
-    (day < 10 ? "0" + day.toString() : day) + "T" +
-    (hour < 10 ? "0" + hour.toString() : hour) + ":" +
-    (minute < 10 ? "0" + minute.toString() : minute);
-  inputData.value = localDatetime;
+function handlerGetTimeNow() {
+  inputData.value = getTimeNow();
 }
 
 // modal de lancamento de venda
@@ -288,7 +280,7 @@ function renderModalNovaVenda() {
   modalVenda.style.display = "block";
   const span = document.getElementsByClassName("close")[0];
 
-  modalVenda.addEventListener('animationstart', getTimeNow)
+  modalVenda.addEventListener('animationstart', handlerGetTimeNow)
 
   renderCheckboxes(checkBoxContainer, todosServicos);
   renderSelectOptions(selectColaboradores, todosColaboradores.map((e) => ({ 'id': e.nome, 'name': e.nome })));
@@ -296,18 +288,16 @@ function renderModalNovaVenda() {
 
   salvarVendas.addEventListener('click', criarVenda);
   titleModal.textContent = 'Criar Serviço';
-  clearInputFields();
+  limpaInputsNovaVenda();
 
   span.addEventListener('click', () => {
-    modalVenda.removeEventListener('animationstart', getTimeNow)
-    clearInputFields();
+    modalVenda.removeEventListener('animationstart', handlerGetTimeNow);
+    limpaInputsNovaVenda();
     modalVenda.style.display = "none";
   });
 }
 
-function clearInputFields() {
-  objServicosSelecionados = [];
-  servicosTratados = [];
+function limpaInputsNovaVenda() {
   todosServicos = [];
   inputID.value = '';
   inputData.value = '';
@@ -319,6 +309,11 @@ function clearInputFields() {
   allCheckboxes.forEach((checkbox) => {
     checkbox.checked = false;
   });
+}
+
+function clearInputFields() {
+  objServicosSelecionados = [];
+  servicosTratados = [];
 
   filtroCliente.value = '';
   filtroColaborador.value = 'Colaborador';
@@ -428,17 +423,25 @@ async function criarListaDeVendas(vendas) {
   strTotalRepasse.style = 'padding:0px; margin:0px'
 
   showTotal.appendChild(strTotalDesconto);
-  showTotal.appendChild(quebra);
   showTotal.appendChild(strTotalRepasse);
 };
+
+function getVendasHoje(todasVendas) {
+  let dataNow = getTimeNow(); // 2024-07-06T03:06
+  let vendasHoje = todasVendas.filter((e) => { return e.data.split('T')[0] == dataNow.split('T')[0] });
+  return vendasHoje;
+}
 
 function refreshListaVendas() {
   clearInputFields();
 
   getAllVendas()
-    .then(vendas => {
-      todasVendas = vendas
-      criarListaDeVendas(todasVendas);
+    .then((vendas) => {
+      todasVendas = vendas;
+      return getVendasHoje(todasVendas);
+    })
+    .then((vendasHoje) => {
+      criarListaDeVendas(vendasHoje);
     })
     .catch(error => {
       console.error('Erro ao carregar vendas:', error);
@@ -447,13 +450,16 @@ function refreshListaVendas() {
 
 function initialize() {
   getAllVendas()
-    .then(vendas => {
-      todasVendas = vendas
-      criarListaDeVendas(todasVendas);
+    .then((vendas) => {
+      todasVendas = vendas;
+      return getVendasHoje(todasVendas);
+    })
+    .then((vendasHoje) => {
+      criarListaDeVendas(vendasHoje);
       addEventListeners();
     })
     .catch(error => {
-      console.error('Erro ao carregar Vendas:', error);
+      console.error('Erro ao carregar vendas:', error);
     });
 
   getAllColaboradores()
@@ -494,6 +500,7 @@ function initialize() {
 }
 
 function addEventListeners() {
+
   newServiceButton.addEventListener("click", renderModalNovaVenda);
   salvarVendas.addEventListener('click', criarVenda);
 }
