@@ -131,7 +131,7 @@ export async function generatePDF(arr, periodo) {
   let props = {
     outputType: jsPDFInvoiceTemplate.OutputType.Save,
     returnJsPDFDocObject: true,
-    fileName: "Relatório 2021",
+    fileName: `${colaborador.res.nome}_De_${allServices[0].data}_a_${allServices[allServices.length - 1].data}`,
     orientationLandscape: false,
     compress: true,
     logo: {
