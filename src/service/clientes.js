@@ -1,6 +1,7 @@
 import { myToast } from '../components/toast.js';
 import { cpfMask, phoneMask } from '../utils/masks.js';
 import { createCliente, getAllClientes, deleteCliente, updateCliente } from '../requests/clientes-ipc.js';
+import { showAlert } from '../components/alert.js';
 
 // ####### cria cliente
 async function createClient() {
@@ -40,6 +41,7 @@ async function updateEmployee() {
 
 // ####### deleta cliente
 async function deletaCliente(id) {
+  await showAlert();
   await deleteCliente(id);
   myToast('deletado com sucesso!', 'success');
   refreshTableEmployees();
