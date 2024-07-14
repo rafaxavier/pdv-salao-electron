@@ -1,3 +1,4 @@
+import { showAlert } from '../components/alert.js';
 import { myToast } from '../components/toast.js';
 import { createColaborador, deleteColaborador, getAllColaboradores, updateColaborador } from '../requests/colaboradores-ipc.js';
 import { cpfMask } from '../utils/masks.js';
@@ -40,6 +41,7 @@ async function updateEmployee() {
 
 // ####### deleta colaborador
 async function deletaColaborador(id) {
+  await showAlert();
   await deleteColaborador(id);
   myToast('deletado com sucesso!', 'success');
   refreshTableEmployees();
