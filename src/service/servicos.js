@@ -1,11 +1,12 @@
+import { showAlert } from '../components/alert.js';
 import { myToast } from '../components/toast.js';
-import { 
-  createServico, 
-  deleteServico, 
-  getAllServicos, 
+import {
+  createServico,
+  deleteServico,
+  getAllServicos,
   updateServico
- } from '../requests/servicos-ipc.js';
-import { moneyMask, percentMask, unmaskMoney, unmaskPercent} from '../utils/masks.js';
+} from '../requests/servicos-ipc.js';
+import { moneyMask, percentMask, unmaskMoney, unmaskPercent } from '../utils/masks.js';
 
 // ####### cria serviço
 async function createService() {
@@ -49,6 +50,7 @@ async function updateService() {
 
 // ####### deleta serviço
 async function deletaServico(id) {
+  await showAlert();
   await deleteServico(id);
   myToast('deletado com sucesso!', 'success');
   refreshTableServices();
@@ -89,7 +91,7 @@ function renderModal(servico = '') {
     inputID.value = id;
     inputNome.value = nome;
     inputPreco.value = preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });;
-    inputTaxa.value =`${(taxa * 100).toFixed(0)}%`;
+    inputTaxa.value = `${(taxa * 100).toFixed(0)}%`;
     salvarServicos.removeEventListener('click', createService);
     salvarServicos.addEventListener('click', updateService);
   } else {
