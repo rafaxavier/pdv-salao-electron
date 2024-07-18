@@ -167,7 +167,7 @@ export async function generatePDF(arr, periodo) {
       tableBodyBorder: true,
       header: [
         {
-          title: "COD",
+          title: "N°",
           style: {
             width: 10
           }
