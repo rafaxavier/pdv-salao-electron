@@ -135,8 +135,7 @@ export async function generatePDF(arr, periodo) {
     orientationLandscape: false,
     compress: true,
     logo: {
-      // src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
-      src: "../../../assets/logo.png",
+      src: "../../assets/logo.png",
       type: 'PNG', //optional, when src= data:uri (nodejs case)
       width: 35, //aspect ratio = width/height
       height: 35,

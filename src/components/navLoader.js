@@ -54,7 +54,7 @@ const criarMenu = (paginaAtiva) => {
     nav.appendChild(ul);
     nav.appendChild(boxConfig);
     let logo = document.createElement('img');
-    logo.src = '../../../assets/logo.png';
+    logo.src = '../../assets/logo.png';
     logo.width = '150';
     logo.style ='margin:25px'
     logo.alt = 'Logo da Empresa';
