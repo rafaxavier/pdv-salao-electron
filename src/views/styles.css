@@ -18,7 +18,7 @@ body {
 }
 
 #content {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 208px);
   overflow-y: auto;
   margin: 0 40px;
 }

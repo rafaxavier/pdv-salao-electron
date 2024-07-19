@@ -60,31 +60,34 @@
 
     <div class="header"></div>
     <div class="conteiner-content">
-        <h2>Lançamentos
-            <button class="btn-success btn-md" style="max-width: 150px;" id="open-modal-cria-venda">
-                Adicionar
-            </button>
-            <button style="max-width: 140px;" hidden id="btn-gerar-pdf">Gerar PDF</button>
-        </h2>
-
-        <!-- ### Add Serviço ### -->
-        <div class="header-top">
-            <div style="padding:5px;">
-                <div style="display: inline-block; flex-wrap:wrap; ">
-                    <label for="">Filtrar por:</label><br>
-                    <input class="filter-input" type="search" id="filtro-cliente" name="cliente"
-                        placeholder="Cliente ...">
-                    <input class="filter-input" type="week" id="filtro-semana" name="semana">
-                    <input class="filter-input" type="month" id="filtro-mes" name="mes">
-                    <select class="filter-input" id="filtro-colaborador" name="colaborador">
-                        <!-- Options will be dynamically inserted here -->
-                    </select>
-                    <button style="width: 172px;" class="btn-md btn-warning" id="btn-filtrar">Filtrar</button>
-                    <button style="width: 172px;" class="btn-md btn-danger" id="btn-limpar-filtro">Limpar</button>
-                </div>
-            </div>
+        <div style="display: flex; justify-content: space-between;">
+            <h2>Lançamentos
+                <button class="btn-success btn-md" style="max-width: 150px;" id="open-modal-cria-venda">
+                    Adicionar
+                </button>
+            </h2>
             <div class="box-total-preview" id="total"></div>
         </div>
+        <div style="display: inline-block;">
+            <div style="width: 395px ; display: inline-block; flex-wrap:wrap; padding-right: 10px;">
+                <label for="">Período:</label><br>
+                <input class="filter-input" type="week" id="filtro-semana" name="semana"> ou
+                <input class="filter-input" type="month" id="filtro-mes" name="mes">
+            </div>
+
+            <div style="display: inline-block; flex-wrap:wrap;">
+                <label for="">Filtrar por:</label><br>
+                <select class="filter-input" id="filtro-colaborador" name="colaborador">
+                    <!-- Options will be dynamically inserted here -->
+                </select>
+                <input class="filter-input" type="search" id="filtro-cliente" name="cliente" placeholder="Cliente ...">
+
+                <button style="width: 52px;" class="btn-md btn-warning" id="btn-filtrar">Filtrar</button>
+                <button style="width: 52px;" class="btn-md btn-danger" id="btn-limpar-filtro">Limpar</button>
+                <button style="width: 52px;" class="btn-md btn-success" id="btn-gerar-pdf">Export</button>
+            </div>
+        </div>
+
         <hr>
         <div id="content">
             <!-- Os Serviços serão adicionados aqui dinamicamente -->
