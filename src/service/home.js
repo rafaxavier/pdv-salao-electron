@@ -126,52 +126,67 @@ function handlerGerarPDF() {
 
 btnGerarPdf.addEventListener('click', handlerGerarPDF);
 
+filtroSemana.addEventListener('change', () => {
+  let semanaValue = filtroSemana.value;
+
+  if (semanaValue !== '') {
+    filtroMes.value = '';
+    const week = convertWeekToDatetimeLocal(semanaValue);
+    periodo = `Período: ${formatDateTime(week.start)} á ${formatDateTime(week.end)}`;
+
+    getAllVendas(week)
+      .then((vendas) => {
+        todasVendas = vendas;
+
+        contentDiv.innerHTML = '';
+        criarListaDeVendas(todasVendas);
+        btnLimparFiltro.addEventListener('click', handlerLimparFiltro);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar vendas:', error);
+      });
+  }
+});
+
+filtroMes.addEventListener('change', () => {
+  let mesValue = filtroMes.value;
+
+  if (mesValue !== '') {
+    filtroSemana.value = '';
+    const mes = convertMonthToDatetimeLocal(mesValue);
+    periodo = `Período: ${formatDateTime(mes.start)} á ${formatDateTime(mes.end)}`;
+
+    getAllVendas(mes)
+      .then((vendas) => {
+        todasVendas = vendas;
+
+        contentDiv.innerHTML = '';
+        criarListaDeVendas(todasVendas);
+        btnLimparFiltro.addEventListener('click', handlerLimparFiltro);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar vendas:', error);
+      });
+
+  }
+});
+
+
 btnFiltrar.addEventListener('click', async () => {
-  let { name: clienteName, value: clienteValue } = filtroCliente;
-  let { name: colaboradorName, value: colaboradorValue } = filtroColaborador;
-  let { name: semanaName, value: semanaValue } = filtroSemana;
-  let { name: mesName, value: mesValue } = filtroMes;
-  let startDate = '';
-  let endDate = '';
+  let clienteValue = filtroCliente.value;
+  let colaboradorValue = filtroColaborador.value;
 
   btnGerarPdf.setAttribute('hidden', '');
   btnLimparFiltro.removeEventListener('click', handlerLimparFiltro);
 
   arr = todasVendas;
 
-  if (semanaValue !== '') {
-    filtroMes.value = '';
-    mesValue = '';
-    const week = convertWeekToDatetimeLocal(filtroSemana.value);
-    startDate = new Date(week.start);
-    endDate = new Date(week.end);
-
-    arr = arr.filter(e => {
-      const vendaDate = new Date(e.data);
-      return vendaDate >= startDate && vendaDate <= endDate;
-    });
-  }
-
-  if (mesValue !== '') {
-    filtroSemana.value = '';
-    semanaValue = '';
-    const mes = convertMonthToDatetimeLocal(filtroMes.value);
-    startDate = new Date(mes.start);
-    endDate = new Date(mes.end);
-
-    arr = arr.filter(e => {
-      const vendaDate = new Date(e.data);
-      return vendaDate >= startDate && vendaDate <= endDate;
-    });
-  }
-
   if (clienteValue !== '') {
-    arr = arr.filter(e => e.cliente.toLowerCase().includes(clienteValue));
+    arr = arr.filter(e => e.cliente.toLowerCase().includes(clienteValue.toLowerCase()));
   }
 
   if (colaboradorValue !== 'Colaborador') {
-    if (semanaValue !== '' || mesValue !== '') {
-      periodo = `Período: ${formatDateTime(startDate)} á ${formatDateTime(endDate)}`;
+    if (periodo) {
       btnGerarPdf.removeAttribute('hidden');
     }
 
@@ -196,8 +211,7 @@ function updateSelectedServices() {
     itensSelecionados.push(checkbox.value);
     showSelectedServices.textContent = '';
 
-    let val = checkbox.value.replace(/\s+/g, '').split("-");
-
+    let val = checkbox.value.split("-");
     objServicosSelecionados.push(val);
 
     // formatando exibicao de servicos selecionados
@@ -311,12 +325,11 @@ async function criarListaDeVendas(vendas) {
     const p2 = document.createElement('p');
     const p3 = document.createElement('p');
     const p4 = document.createElement('p');
-    const p5 = document.createElement('p');
-    p1.textContent = 'COD: ' + e.id;
+
+    p1.textContent = 'N°: ' + e.id;
     p2.textContent = 'Cliente: ' + e.cliente;
     p3.textContent = 'Atendente: ' + e.colaborador;
-    p4.textContent = 'Horário: ' + formatDateTime(e.data);
-    p5.textContent = 'Ação';
+    p4.textContent = formatDateTime(e.data);
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'X';
@@ -394,22 +407,14 @@ async function criarListaDeVendas(vendas) {
   showTotal.appendChild(strTotalRepasse);
 };
 
-function getVendasHoje(todasVendas) {
-  let dataNow = getTimeNow(); // 2024-07-06T03:06
-  let vendasHoje = todasVendas.filter((e) => { return e.data.split('T')[0] == dataNow.split('T')[0] });
-  return vendasHoje;
-}
-
 function refreshListaVendas() {
+  let dataNow = getTimeNow(); // 2024-07-06T03:06
+  let param = { dataNow: dataNow.split('T')[0] }
   clearInputFields();
-
-  getAllVendas()
+  getAllVendas(param)
     .then((vendas) => {
       todasVendas = vendas;
-      return getVendasHoje(todasVendas);
-    })
-    .then((vendasHoje) => {
-      criarListaDeVendas(vendasHoje);
+      criarListaDeVendas(todasVendas);
     })
     .catch(error => {
       console.error('Erro ao carregar vendas:', error);
@@ -417,13 +422,12 @@ function refreshListaVendas() {
 };
 
 function initialize() {
-  getAllVendas()
+  let dataNow = getTimeNow(); // 2024-07-06T03:06
+  let param = { dataNow: dataNow.split('T')[0] }
+  getAllVendas(param)
     .then((vendas) => {
       todasVendas = vendas;
-      return getVendasHoje(todasVendas);
-    })
-    .then((vendasHoje) => {
-      criarListaDeVendas(vendasHoje);
+      criarListaDeVendas(todasVendas);
       addEventListeners();
     })
     .catch(error => {

@@ -70,7 +70,18 @@ const criarVenda = async (data, cliente, colaborador, servicosTratados) => {
   });
 };
 
-const obterVendas = () => {
+const obterVendas = (parametros) => {
+  
+  let condition='';
+  if(parametros.dataNow){
+    condition = `WHERE v.data LIKE '${parametros.dataNow}%'`;
+  }
+
+  if(parametros.start && parametros.end){
+    condition = `WHERE v.data >= '${parametros.start}' AND v.data <= '${parametros.end}'`;
+  }
+
+
   return new Promise((resolve, reject) => {
     db.all(`
       SELECT 
@@ -90,6 +101,7 @@ const obterVendas = () => {
         venda_servicos vs 
       ON 
         v.id = vs.venda_id
+      ${condition}
       ORDER BY 
         v.data ASC
     `, (err, rows) => {
@@ -127,7 +139,6 @@ const obterVendas = () => {
     });
   });
 };
-
 
 const deletarVenda = async (id) => {
   return new Promise((resolve, reject) => {

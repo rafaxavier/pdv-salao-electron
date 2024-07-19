@@ -169,8 +169,8 @@ ipcMain.on('criarVendas', async (event, { data, cliente, colaborador, servicosTr
   }
 });
 
-ipcMain.on('obterVendas', async (event) => {
-  const vendas = await obterVendas();
+ipcMain.on('obterVendas', async (event,{ parametros}) => {
+  const vendas = await obterVendas(parametros);
   event.reply('obterVendasResult', { success: true, vendas });
 });
 

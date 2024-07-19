@@ -1,7 +1,7 @@
 // CRUD Requisicoes IPC
-export function getAllVendas() {
+export function getAllVendas(parametros) {
   return new Promise((resolve, reject) => {
-    window.electron.ipcRenderer.sendMessage('obterVendas');
+    window.electron.ipcRenderer.sendMessage('obterVendas',{parametros});
     window.electron.ipcRenderer.once('obterVendasResult', (resposta) => {
       resolve(resposta.vendas);
     });
