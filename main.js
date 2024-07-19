@@ -25,7 +25,7 @@ const createWindow = () => {
   mainWindow.loadFile('./src/views/home/index.html')
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 /* COMUNICADORES IPC PARA CHAMADAS DAS QUERYS*/

@@ -147,9 +147,9 @@ export async function generatePDF(arr, periodo) {
     business: {
       name: "Espaço Raynne Souza",
       address: "Tv. Um, 137 - Recreio, Rio das Ostras - RJ",
-      phone: "(+22) 99999-9999",
-      email: "email@example.com",
-      website: "www.example.com",
+      phone: "(+22) 99800-8997",
+      email: "rayanne129@gmail.com",
+      // website: "www.example.com",
     },
     contact: {
       label: `${colaborador.res.profissao}: `,
